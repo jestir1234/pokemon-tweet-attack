@@ -12,6 +12,9 @@ gem 'figaro'
 gem 'twitter'
 gem 'pry-rails'
 gem 'annotate'
+gem 'excon'
+gem 'easy_translate'
+
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server

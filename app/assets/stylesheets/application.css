@@ -13,3 +13,256 @@
  *= require_tree .
  *= require_self
  */
+
+ body{
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   border: 5px double black;
+   font-family: 'Geo', sans-serif;
+   letter-spacing: 2px;
+ }
+
+ h1{
+   font-family: 'Bungee Shade', cursive;
+   letter-spacing: 5px;
+   font-size: 50px;
+   z-index: 20;
+   color: #eea29a;
+   text-shadow:  #d9ad7c 0 0 5px;
+   font-weight: bold;
+ }
+
+ h2{
+   font-family: 'Monoton', cursive;
+   letter-spacing: 3px;
+ }
+
+
+ body > * {
+   padding: 40px;
+ }
+
+#pokemon-list{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pokemon-item{
+  padding: 10px;
+}
+
+.pokemon-item:hover{
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+.team-container{
+  position: relative;
+  height: 200px;
+  width: 500px;
+  margin-bottom: 20px;
+  border-style: double;
+  box-shadow:
+    0 0 0 10px hsl(0, 0%, 80%),
+    0 0 0 15px hsl(0, 0%, 90%);
+}
+
+.team-container > * {
+  padding: 5px;
+}
+
+.team-container #trainer{
+  height: 200px;
+}
+
+.team-container #ready-btn{
+  font-weight: bold;
+  background-color: #d9ecd0;
+  border-radius: 10px;
+  position: absolute;
+  top: 50px;
+  right: 180px;
+  border: 4px inset gray;
+  padding:10px;
+
+  -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 2s; /* Firefox < 16 */
+        -ms-animation: fadein 2s; /* Internet Explorer */
+         -o-animation: fadein 2s; /* Opera < 12.1 */
+            animation: fadein 2s;
+}
+
+.team-container #ready-btn:hover{
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.team-container #ready-btn:active{
+  transform: scale(1.0);
+  cursor: pointer;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.hide{
+  display: none;
+}
+
+.show{
+  display: block;
+}
+
+.background-modal{
+  background-color: rgba(0,0,255,0.6);
+  z-index: 2;
+  position: absolute;
+  /*top: 0;
+  bottom: 0;*/
+  left: 0;
+  right: 0;
+  -webkit-animation: fade 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade 2s; /* Firefox < 16 */
+        -ms-animation: fade 2s; /* Internet Explorer */
+         -o-animation: fade 2s; /* Opera < 12.1 */
+            animation: fade 2s;
+}
+
+
+#gamescreen-canvas{
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-image: url("http://cdn.pcwallart.com/images/pixel-art-pokemon-wallpaper-2.jpg");
+  background-position: right 0px bottom 0px;
+  border: 10px double #3b3a30;
+  margin: auto;
+  margin-top: 150px;
+  padding: auto;
+  height: 500px;
+  min-width: 50%;
+  max-width: 90%;
+  -webkit-animation: fade-screen 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade-screen 2s; /* Firefox < 16 */
+        -ms-animation: fade-screen 2s; /* Internet Explorer */
+         -o-animation: fade-screen 2s; /* Opera < 12.1 */
+            animation: fade-screen 2s;
+  -webkit-box-shadow: 13px 14px 5px -3px rgba(0,0,0,0.75);
+  -moz-box-shadow: 13px 14px 5px -3px rgba(0,0,0,0.75);
+  box-shadow: 13px 14px 5px -3px rgba(0,0,0,0.75);
+}
+
+
+@keyframes fade {
+  from { background-color: transparent;}
+  to   { background-color: rgba(0,0,255,0.6);}
+}
+
+@keyframes fade-screen{
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.gamescreen-canvas img{
+  height: 30px;
+  width: 30px;
+}
+.player1-pokeballs{
+  padding: 20px;
+}
+.player2-pokeballs{
+  padding: 20px;
+}
+
+.player1-sprite{
+  z-index: 12;
+  height: 40%;
+  position: absolute;
+  left: 40px;
+  top: 40%;
+  -webkit-animation: fade-screen 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade-screen 2s; /* Firefox < 16 */
+        -ms-animation: fade-screen 2s; /* Internet Explorer */
+         -o-animation: fade-screen 2s; /* Opera < 12.1 */
+            animation: fade-screen 2s;
+}
+
+.player2-sprite{
+  z-index: 12;
+  height: 40%;
+  position: absolute;
+  right: 40px;
+  top: 40%;
+  -webkit-animation: fade-screen 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade-screen 2s; /* Firefox < 16 */
+        -ms-animation: fade-screen 2s; /* Internet Explorer */
+         -o-animation: fade-screen 2s; /* Opera < 12.1 */
+            animation: fade-screen 2s;
+}
+
+
+.waiting-area-container-p1{
+  border: 2px inset gray;
+  background: white;
+  border: 1px solid black;
+  height: 10%;
+  width: 10%;
+  position: absolute;
+  min-width: 200px;
+  left: 40px;
+  bottom: 100px;
+  -webkit-animation: fade-screen 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade-screen 2s; /* Firefox < 16 */
+        -ms-animation: fade-screen 2s; /* Internet Explorer */
+         -o-animation: fade-screen 2s; /* Opera < 12.1 */
+            animation: fade-screen 2s;
+}
+
+.waiting-area-container-p1 > * {
+  padding: 5px;
+  -webkit-animation: fade-screen 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade-screen 2s; /* Firefox < 16 */
+        -ms-animation: fade-screen 2s; /* Internet Explorer */
+         -o-animation: fade-screen 2s; /* Opera < 12.1 */
+            animation: fade-screen 2s;
+}
+
+.waiting-area-container-p1 > *:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.waiting-area-container-p2{
+  border: 2px inset gray;
+  background: white;
+  border: 1px solid black;
+  height: 10%;
+  width: 10%;
+  position: absolute;
+  min-width: 200px;
+  right: 40px;
+  bottom: 100px;
+  -webkit-animation: fade-screen 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade-screen 2s; /* Firefox < 16 */
+        -ms-animation: fade-screen 2s; /* Internet Explorer */
+         -o-animation: fade-screen 2s; /* Opera < 12.1 */
+            animation: fade-screen 2s;
+}
+
+.waiting-area-container-p2 > *:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.waiting-area-container-p2 > * {
+  padding: 5px;
+  -webkit-animation: fade-screen 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade-screen 2s; /* Firefox < 16 */
+        -ms-animation: fade-screen 2s; /* Internet Explorer */
+         -o-animation: fade-screen 2s; /* Opera < 12.1 */
+            animation: fade-screen 2s;
+}
