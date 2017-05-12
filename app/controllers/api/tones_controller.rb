@@ -4,19 +4,6 @@ require 'excon'
 class Api::TonesController < ApplicationController
 
   def create
-    tweet_count = params[:pokemonTweets][:tweet_count].to_i
-    random_tweets = []
-    @tweet_hash = {}
-
-    4.times do
-      idx = rand(0...tweet_count).to_s
-      random_tweet = params[:pokemonTweets][:tweets][idx]
-      while random_tweet['lang'] != "en"
-        idx = rand(0...tweet_count).to_s
-        random_tweet = params[:pokemonTweets][:tweets][idx]
-      end
-      random_tweets << random_tweet
-    end
 
     random_tweets.each_with_index do |tweet, idx|
 

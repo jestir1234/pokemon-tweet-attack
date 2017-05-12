@@ -8,6 +8,8 @@ let currentTeam = [];
 let opponentTeam = [];
 let currentPokemonP1 = null;
 let currentPokemonP2 = null;
+let currentPokemonP1Tweets = null;
+let currentPokemonP2Tweets = null;
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
@@ -86,10 +88,10 @@ const fetchAllPokemon = () => {
     $btn.setAttribute("class", "show");
   }
 
-  const fetchTweetTones = (pokemonTweets) => {
+  const fetchTweetTones = (pokemon) => {
     return $.ajax({
       method: "POST",
-      url: "api/tones",
+      url: "api/twitter",
       data: {pokemon: pokemon}
     })
   }
@@ -216,6 +218,7 @@ const fetchAllPokemon = () => {
     renderSelectPokemonText();
   }
 
+
   const redrawCanvas = () => {
     let canvas = document.getElementById("gamescreen-canvas");
     let ctx = canvas.getContext("2d");
@@ -257,8 +260,133 @@ const fetchAllPokemon = () => {
   const playPokemon = (pokemon) => {
 
     if (currentPokemonP1 === null){
+      fetchPokemonTweets(pokemon).then((tweetsP1) =>
+      {
+        currentPokemonP1Tweets = tweetsP1.tweets;
+        renderTweetOptions(tweetsP1.tweets);
+      });
       renderPokemonOntoField(pokemon, "player1");
     }
+  }
+
+  const selectRandomTweets = (tweets) => {
+    let collection = [];
+    while (collection.length < 4){
+      let idx = Math.floor(Math.random() * tweets.tweets.length);
+      let randomTweet = tweets.tweets[idx];
+      if (randomTweet.lang == "en") {
+        collection.push(randomTweet);
+      }
+    }
+    return collection;
+  }
+
+  const renderTweetOptions = (tweets) => {
+    let randomTweets = selectRandomTweets(tweets);
+    let background = document.getElementsByClassName('background-modal')[0];
+    let optionsContainer = document.createElement("div");
+    optionsContainer.setAttribute("class", "options-container");
+    let header = document.createElement("h3");
+    header.innerHTML = "SELECT A TWEET ATTACK!";
+    optionsContainer.appendChild(header);
+
+    randomTweets.forEach((tweet) => {
+      let tweetItem = renderTweet(tweet);
+      optionsContainer.appendChild(tweetItem);
+    });
+    background.appendChild(optionsContainer);
+  }
+
+  const renderTweet = (tweet) => {
+    let tweetContainer = document.createElement("div");
+    tweetContainer.setAttribute("class", "tweet-container");
+    let tweetHeader = document.createElement("div");
+    tweetHeader.setAttribute("class", "tweet-header");
+
+    let tweetNameContainer = document.createElement("div");
+    tweetNameContainer.setAttribute("class", "tweet-name-container");
+    let tweetImageContainer = document.createElement("div");
+    tweetImageContainer.setAttribute("class", "tweet-image-container");
+
+
+    // let name = tweet.user.name;
+    // let username = tweet.user.screen_name;
+    // let profilePic = tweet.user.profile_image_url_https;
+    // let location = tweet.user.location;
+    // let text = tweet.text;
+    // let date = tweet.created_at;
+    // let favorites = tweet.favorite_count;
+    // let retweets = tweet.retweet_count;
+
+    //TWEET NAME CONTAINER
+      //tweet profile pic container
+    let tweetPic = document.createElement("img");
+    tweetPic.src = tweet.user.profile_image_url_https;
+    tweetImageContainer.appendChild(tweetPic);
+      //tweet name container
+    let tweetName = document.createElement("h2");
+    tweetName.innerHTML = tweet.user.name;
+    let tweetUsername = document.createElement("p");
+    tweetUsername.innerHTML = "@" + tweet.user.screen_name;
+    tweetNameContainer.appendChild(tweetName);
+    tweetNameContainer.appendChild(tweetUsername);
+
+      //append tweet pic container and name container to tweet header
+    tweetHeader.appendChild(tweetImageContainer);
+    tweetHeader.appendChild(tweetNameContainer);
+
+    // APPEND tweet header to tweetContainer
+    tweetContainer.appendChild(tweetHeader);
+
+    //TWEET TEXT CONTAINER
+    let tweetText = document.createElement("p");
+    tweetText.setAttribute("class", "tweet-text");
+    tweetText.innerHTML = tweet.text;
+
+    // APPEND TWEET TEXT TO TWEET CONTAINER
+    tweetContainer.appendChild(tweetText);
+
+
+    //TWEET DATE CONTAINER
+    let tweetDate = document.createElement("p");
+    tweetDate.setAttribute("class", "tweet-date");
+    tweetDate.innerHTML = tweet.created_at;
+
+    // APPEND TWEET DATE TO TWEET CONTAINER
+    tweetContainer.appendChild(tweetDate);
+
+    //TWEET STATS CONTAINER (RETWEETS, FAVORITES, LOCATION)
+    let tweetStats = document.createElement("div");
+    tweetStats.setAttribute("class", "tweet-stats");
+      //retweet
+    let retweetContainer = document.createElement("div");
+    retweetContainer.setAttribute("class", "retweet-container");
+    let retweetIcon = document.createElement("img");
+    retweetIcon.src = "http://simpleicon.com/wp-content/uploads/retweet.png";
+    let retweet = document.createElement("p");
+    retweet.innerHTML = tweet.retweet_count;
+    retweetContainer.appendChild(retweetIcon);
+    retweetContainer.appendChild(retweet);
+      //favorites
+    let favoritesContainer = document.createElement("div");
+    favoritesContainer.setAttribute("class", "favorites-container");
+    let favIcon = document.createElement("img");
+    favIcon.src = "http://www.clker.com/cliparts/H/Z/c/f/2/H/solid-dark-grey-heart-md.png";
+    let favorites = document.createElement("p");
+    favorites.innerHTML = tweet.favorite_count;
+    favoritesContainer.appendChild(favIcon);
+    favoritesContainer.appendChild(favorites);
+      //location
+    let location = document.createElement("p");
+    location.innerHTML = tweet.user.location;
+
+    tweetStats.appendChild(retweetContainer);
+    tweetStats.appendChild(favoritesContainer);
+    tweetStats.appendChild(location);
+
+    // APPEND TWEET STATS TO TWEET CONTAINER
+    tweetContainer.appendChild(tweetStats);
+    return tweetContainer;
   }
 
   const renderPokemonOntoField = (pokemon, player) => {
@@ -305,7 +433,6 @@ const fetchAllPokemon = () => {
     setTimeout(() => background.appendChild(smoke), 2500);
     setTimeout(() => { smoke.setAttribute("class", "hide")}, 3000);
     setTimeout(() => background.appendChild(pokemonGif), 3000);
-
   }
 
 });

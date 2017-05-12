@@ -318,3 +318,142 @@
   margin-top: 480px;
   z-index: 26;
 }
+
+.options-container{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 5px inset #667292;
+  z-index: 9;
+  background: white;
+  position: absolute;
+  top: 55%;
+  margin: auto;
+  left: 0;
+  right: 0;
+  width: 500px;
+  -webkit-box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
+  -moz-box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
+  box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
+  -webkit-animation: slide-down 1s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: slide-down 1s; /* Firefox < 16 */
+        -ms-animation: slide-down 1s; /* Internet Explorer */
+         -o-animation: slide-down 1s; /* Opera < 11.1 */
+            animation: slide-down 1s;
+}
+
+.options-container h3{
+  font-size: 30px;
+}
+
+@keyframes slide-down {
+  from { top: 30%;}
+  to   { top: 50%;}
+}
+
+.tweet-container{
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  border: 2px double gray;
+  height: 250px;
+  width: 90%;
+  -webkit-box-shadow: 10px 10px 23px -1px rgba(6,33,41,1);
+  -moz-box-shadow: 10px 10px 23px -1px rgba(6,33,41,1);
+  box-shadow: 10px 10px 23px -1px rgba(6,33,41,1);
+}
+
+.tweet-header{
+  display:flex;
+  border: 1px solid #87bdd8;
+  align-items: center;
+  padding: 5px;
+  height: 100px;
+}
+
+.tweet-image-container{
+  border-radius: 5px;
+}
+
+.tweet-image-container img{
+  width: 100%;
+  max-height: 45px;
+}
+
+.tweet-name-container{
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.tweet-name-container h2{
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+}
+
+.tweet-name-container p{
+  padding:0;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  color: gray;
+}
+
+.tweet-stats{
+  display: flex;
+  align-items: center;
+}
+
+.tweet-stats > *{
+  margin-left: 10px;
+  padding-bottom: 5px;
+}
+
+.tweet-stats img{
+  width: 20px;
+  height: 20px;
+}
+
+.tweet-stats p{
+  font-size: 12px;
+  color: gray;
+  font-family: 'Roboto', sans-serif;
+}
+
+.retweet-container{
+  display:flex;
+  align-items: center;
+}
+
+.retweet-container > *{
+  margin-left: 4px;
+}
+
+.retweet-container p{
+  font-size: 20px;
+}
+
+.favorites-container{
+  display:flex;
+  align-items: center;
+}
+
+.favorites-container > * {
+  margin-left: 4px;
+}
+
+.favorites-container p{
+  font-size: 20px;
+}
+
+.tweet-text{
+  font-family: 'Roboto', sans-serif;
+  padding: 5px;
+}
+
+.tweet-date{
+  font-family: 'Roboto', sans-serif;
+  color: gray;
+  padding: 5px;
+}
