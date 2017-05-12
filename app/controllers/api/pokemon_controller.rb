@@ -12,7 +12,8 @@ class Api::PokemonController < ApplicationController
       name = pokemon_objects[id]["name"]
       url = pokemon_objects[id]['url']
       image_url = "/pokemon_images/#{num + 1}.png"
-      @pokemon << {'name' => name, 'url' => url, 'image_url' => image_url}
+      gif_url = "https://img.pokemondb.net/sprites/black-white/anim/normal/#{name}.gif"
+      @pokemon << {'name' => name, 'url' => url, 'image_url' => image_url, 'gif_url' => gif_url}
     end
 
     client = Twitter::REST::Client.new do |config|

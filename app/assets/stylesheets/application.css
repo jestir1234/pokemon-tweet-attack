@@ -266,3 +266,56 @@
          -o-animation: fade-screen 2s; /* Opera < 12.1 */
             animation: fade-screen 2s;
 }
+
+.pokeball-gif-p1{
+  left: -10%;
+  position: absolute;
+  margin-top: 450px;
+  transform: scale(.3);
+  z-index: 25;
+}
+
+.pokeball-gif-p2{
+  right: -10%;
+  position: absolute;
+  margin-top: 450px;
+  z-index: 25;
+  -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scale(-.3);
+}
+
+.smoke-gif-p1{
+  left: 20%;
+  position: absolute;
+  margin-top: 440px;
+  z-index: 26;
+}
+
+.smoke-gif-p2{
+  right: 20%;
+  position: absolute;
+  margin-top: 440px;
+  z-index: 26;
+}
+
+.pokemon-gif-p1{
+  transform: scale(2.0);
+  left: 25%;
+  position: absolute;
+  margin-top: 480px;
+  z-index: 26;
+  -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+.pokemon-gif-p2{
+  transform: scale(2.0);
+  right: 25%;
+  position: absolute;
+  margin-top: 480px;
+  z-index: 26;
+}

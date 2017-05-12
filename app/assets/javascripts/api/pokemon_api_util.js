@@ -6,6 +6,8 @@ console.log("dom is fully loaded, pokemon util running");
 let pokemon = [];
 let currentTeam = [];
 let opponentTeam = [];
+let currentPokemonP1 = null;
+let currentPokemonP2 = null;
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
@@ -22,15 +24,15 @@ const fetchAllPokemon = () => {
     });
   }
 
-  // fetchAllPokemon().then(() => {
-  //   return $.ajax({
-  //     method: "POST",
-  //     url: 'api/pokemon',
-  //     data: {pokemon: pokemon}
-  //   }).then((allPokemon) => {
-  //     window.pokemon = allPokemon;
-  //   }).then(() => generatePokemonList());
-  // })
+  fetchAllPokemon().then(() => {
+    return $.ajax({
+      method: "POST",
+      url: 'api/pokemon',
+      data: {pokemon: pokemon}
+    }).then((allPokemon) => {
+      window.pokemon = allPokemon;
+    }).then(() => generatePokemonList());
+  })
 
   const fetchPokemonTweets = (pokemon) => {
     return $.ajax({
@@ -102,7 +104,6 @@ const fetchAllPokemon = () => {
   // }
 
   const stopFunction = (interval) => {
-    console.log("stopping")
     clearInterval(interval);
   }
 
@@ -120,10 +121,10 @@ const fetchAllPokemon = () => {
   }
 
   const renderGameModal = () => {
-    // for (let i = 0; i < 6; i++){
-    //   let idx = Math.floor(Math.random() * pokemon.length);
-    //   opponentTeam.push(window.pokemon[idx]);
-    // }
+    for (let i = 0; i < 6; i++){
+      let idx = Math.floor(Math.random() * pokemon.length);
+      opponentTeam.push(window.pokemon[idx]);
+    }
 
     let backgroundModal = document.createElement("div");
     backgroundModal.setAttribute("class", "background-modal");
@@ -179,6 +180,14 @@ const fetchAllPokemon = () => {
     background.appendChild(player1);
     background.appendChild(player2);
     renderPlayerPokemon();
+
+    let opponentPokemon = opponentSelectRandomPokemon();
+    setTimeout(() => renderPokemonOntoField(opponentPokemon, "player2"), 5000);
+  }
+
+  const opponentSelectRandomPokemon = () => {
+    let idx = Math.floor(Math.random() * opponentTeam.length);
+    return opponentTeam[idx];
   }
 
   const renderPlayerPokemon = () => {
@@ -193,13 +202,15 @@ const fetchAllPokemon = () => {
     currentTeam.forEach((pokemon) => {
       let pokeImage = document.createElement('img');
       pokeImage.src = pokemon['image_url'];
-      setTimeout(() => waitingArea1.appendChild(pokeImage), 2000);
+
+      pokeImage.addEventListener("click", (e) => playPokemon(pokemon));
+      setTimeout(() => waitingArea1.appendChild(pokeImage), 1000);
     });
 
     opponentTeam.forEach((pokemon) => {
       let pokeImage2 = document.createElement('img');
       pokeImage2.src = pokemon['image_url'];
-      setTimeout(() => waitingArea2.appendChild(pokeImage2), 2000);
+      setTimeout(() => waitingArea2.appendChild(pokeImage2), 1000);
     });
 
     renderSelectPokemonText();
@@ -217,28 +228,84 @@ const fetchAllPokemon = () => {
     let ctx = canvas.getContext("2d");
 
     setTimeout(() => {ctx.strokeText("C", canvas.width * .35, 10)}, 1000);
-    setTimeout(() => {ctx.strokeText("H", canvas.width * .4, 10)}, 1100);
-    setTimeout(() => {ctx.strokeText("O", canvas.width * .45, 10)}, 1200);
-    setTimeout(() => {ctx.strokeText("O", canvas.width * .5, 10)}, 1300);
-    setTimeout(() => {ctx.strokeText("S", canvas.width * .55, 10)}, 1400);
-    setTimeout(() => {ctx.strokeText("E", canvas.width * .6, 10)}, 1500);
+    setTimeout(() => {ctx.strokeText("H", canvas.width * .4, 10)}, 1050);
+    setTimeout(() => {ctx.strokeText("O", canvas.width * .45, 10)}, 1100);
+    setTimeout(() => {ctx.strokeText("O", canvas.width * .5, 10)}, 1150);
+    setTimeout(() => {ctx.strokeText("S", canvas.width * .55, 10)}, 1200);
+    setTimeout(() => {ctx.strokeText("E", canvas.width * .6, 10)}, 1250);
 
-    setTimeout(redrawCanvas, 2000);
+    setTimeout(redrawCanvas, 1800);
 
     setTimeout(() => {ctx.strokeText("Y", canvas.width * .4, 10)}, 2000);
-    setTimeout(() => {ctx.strokeText("O", canvas.width * .45, 10)}, 2100);
-    setTimeout(() => {ctx.strokeText("U", canvas.width * .5, 10)}, 2200);
-    setTimeout(() => {ctx.strokeText("R", canvas.width * .55, 10)}, 2300);
+    setTimeout(() => {ctx.strokeText("O", canvas.width * .45, 10)}, 2050);
+    setTimeout(() => {ctx.strokeText("U", canvas.width * .5, 10)}, 2100);
+    setTimeout(() => {ctx.strokeText("R", canvas.width * .55, 10)}, 2150);
 
-    setTimeout(redrawCanvas, 2700);
+    setTimeout(redrawCanvas, 2600);
 
     setTimeout(() => {ctx.strokeText("P", canvas.width * .35, 10)}, 2700);
-    setTimeout(() => {ctx.strokeText("O", canvas.width * .4, 10)}, 2800);
-    setTimeout(() => {ctx.strokeText("K", canvas.width * .45, 10)}, 2900);
-    setTimeout(() => {ctx.strokeText("E", canvas.width * .5, 10)}, 3000);
-    setTimeout(() => {ctx.strokeText("M", canvas.width * .55, 10)}, 3100);
-    setTimeout(() => {ctx.strokeText("O", canvas.width * .6, 10)}, 3200);
-    setTimeout(() => {ctx.strokeText("N", canvas.width * .65, 10)}, 3300);
+    setTimeout(() => {ctx.strokeText("O", canvas.width * .4, 10)}, 2750);
+    setTimeout(() => {ctx.strokeText("K", canvas.width * .45, 10)}, 2800);
+    setTimeout(() => {ctx.strokeText("E", canvas.width * .5, 10)}, 2850);
+    setTimeout(() => {ctx.strokeText("M", canvas.width * .55, 10)}, 2900);
+    setTimeout(() => {ctx.strokeText("O", canvas.width * .6, 10)}, 2950);
+    setTimeout(() => {ctx.strokeText("N", canvas.width * .65, 10)}, 3000);
+
+    setTimeout(redrawCanvas, 3300);
+  }
+
+  const playPokemon = (pokemon) => {
+
+    if (currentPokemonP1 === null){
+      renderPokemonOntoField(pokemon, "player1");
+    }
+  }
+
+  const renderPokemonOntoField = (pokemon, player) => {
+    let pokeballGifClass;
+    let smokeGifClass;
+    let pokemonGifClass;
+
+    if (player === "player1"){
+      pokeballGifClass = "pokeball-gif-p1";
+      smokeGifClass = "smoke-gif-p1";
+      pokemonGifClass = "pokemon-gif-p1";
+    } else {
+      pokeballGifClass = "pokeball-gif-p2";
+      smokeGifClass = "smoke-gif-p2";
+      pokemonGifClass = "pokemon-gif-p2";
+    }
+
+    let canvas = document.getElementById("gamescreen-canvas");
+    let canvasX = canvas.offsetLeft;
+
+    let background = document.getElementsByClassName('background-modal')[0];
+    let pokeball = document.createElement('img');
+    pokeball.src = "https://media.giphy.com/media/DJM88aCmEeaNG/giphy.gif";
+    pokeball.setAttribute("class", pokeballGifClass);
+
+    if (player === "player1"){
+      pokeball.style.left = (canvasX - 10).toString() + 'px';
+    } else {
+      canvasX = canvas.offsetRight;
+      pokeball.style.right = (canvasX - 10).toString() + 'px';
+    }
+
+    let smoke = document.createElement('img');
+    smoke.setAttribute("class", smokeGifClass);
+    smoke.src = "https://media.giphy.com/media/drj4KPFH32Mw/giphy.gif";
+
+    background.appendChild(pokeball);
+
+    let pokemonGif = document.createElement("img");
+    pokemonGif.setAttribute("class", pokemonGifClass);
+    pokemonGif.src = pokemon['gif_url'];
+
+    setTimeout(() => { pokeball.setAttribute("class", "hide")}, 2400);
+    setTimeout(() => background.appendChild(smoke), 2500);
+    setTimeout(() => { smoke.setAttribute("class", "hide")}, 3000);
+    setTimeout(() => background.appendChild(pokemonGif), 3000);
+
   }
 
 });
