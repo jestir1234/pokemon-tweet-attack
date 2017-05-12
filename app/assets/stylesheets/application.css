@@ -276,7 +276,7 @@
 }
 
 .pokeball-gif-p2{
-  right: -10%;
+  right: 10%;
   position: absolute;
   margin-top: 450px;
   z-index: 25;
@@ -301,15 +301,14 @@
 }
 
 .pokemon-gif-p1{
-  transform: scale(2.0);
   left: 25%;
   position: absolute;
   margin-top: 480px;
   z-index: 26;
-  -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
+  -moz-transform: scaleX(-2);
+    -o-transform: scaleX(-2);
+    -webkit-transform: scaleX(-2);
+    transform: scale(-2, 2);
 }
 
 .pokemon-gif-p2{
