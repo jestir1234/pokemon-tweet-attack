@@ -320,13 +320,14 @@
 }
 
 .options-container{
+  overflow: hidden;
   display:flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border: 5px inset #667292;
   z-index: 9;
-  background: white;
+  background: #d9ecd0;
   position: absolute;
   top: 55%;
   margin: auto;
@@ -337,31 +338,55 @@
   -moz-box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
   box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
   -webkit-animation: slide-down 1s; /* Safari, Chrome and Opera > 12.1 */
-       -moz-animation: slide-down 1s; /* Firefox < 16 */
-        -ms-animation: slide-down 1s; /* Internet Explorer */
-         -o-animation: slide-down 1s; /* Opera < 11.1 */
-            animation: slide-down 1s;
+       -moz-animation: slide-down 1.5s; /* Firefox < 16 */
+        -ms-animation: slide-down 1.5s; /* Internet Explorer */
+         -o-animation: slide-down 1.5s; /* Opera < 11.1 */
+            animation: slide-down 1.5s;
 }
 
 .options-container h3{
   font-size: 30px;
 }
 
+.options-container h4{
+  font-size: 15px;
+}
+
+.next-btn{
+  height: 100px;
+}
+
+.next-btn:hover{
+  cursor: pointer;
+}
+
+.next-btn:active{
+  transform: scale(.9);
+}
+
 @keyframes slide-down {
-  from { top: 30%;}
+  from { top: 25%;}
   to   { top: 50%;}
 }
 
 .tweet-container{
-  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-top: 10px;
   display: flex;
+  background: white;
   flex-direction: column;
   border: 2px double gray;
-  height: 250px;
+  height: 280px;
   width: 90%;
+  transition: background-color 0.5s ease;
   -webkit-box-shadow: 10px 10px 23px -1px rgba(6,33,41,1);
   -moz-box-shadow: 10px 10px 23px -1px rgba(6,33,41,1);
   box-shadow: 10px 10px 23px -1px rgba(6,33,41,1);
+}
+
+.tweet-container:hover{
+  cursor: pointer;
+  background-color: #cfe0e8;
 }
 
 .tweet-header{
@@ -369,7 +394,7 @@
   border: 1px solid #87bdd8;
   align-items: center;
   padding: 5px;
-  height: 100px;
+  min-height: 50px;
 }
 
 .tweet-image-container{
@@ -456,4 +481,9 @@
   font-family: 'Roboto', sans-serif;
   color: gray;
   padding: 5px;
+  margin-left: 5px;
+}
+
+.tweet-container:active{
+  transform: scale(.9);
 }

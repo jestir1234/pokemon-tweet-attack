@@ -5,7 +5,8 @@ class Api::TonesController < ApplicationController
 
   def create
 
-    random_tweets.each_with_index do |tweet, idx|
+    tweet = params[:tweet]
+    
 
       response = Excon.post("https://gateway.watsonplatform.net/tone-analyzer/api/v3/tone?version=2016-05-19&tones=emotion",
       body: "{\"text\": \"#{tweet['text']}\"}",
@@ -21,8 +22,8 @@ class Api::TonesController < ApplicationController
       else
         scores = "Unavailable"
       end
-      @tweet_hash[idx] = {text: tweet['text'], score: scores}
-    end
+      @scores = scores
+
 
     render 'api/tones/tones'
   end

@@ -6,10 +6,13 @@ console.log("dom is fully loaded, pokemon util running");
 let pokemon = [];
 let currentTeam = [];
 let opponentTeam = [];
+let onP1 = null;
 let currentPokemonP1 = null;
 let currentPokemonP2 = null;
 let currentPokemonP1Tweets = null;
 let currentPokemonP2Tweets = null;
+let currentRandomTweets = null;
+let currentTweetScores = null;
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
@@ -88,11 +91,11 @@ const fetchAllPokemon = () => {
     $btn.setAttribute("class", "show");
   }
 
-  const fetchTweetTones = (pokemon) => {
+  const fetchTweetTones = (tweet) => {
     return $.ajax({
       method: "POST",
-      url: "api/twitter",
-      data: {pokemon: pokemon}
+      url: "api/tones",
+      data: {tweet: tweet}
     })
   }
   //
@@ -120,6 +123,7 @@ const fetchAllPokemon = () => {
     setTimeout(() => stopFunction(expandWindowInterval), 500);
     setTimeout(drawPokeballs, 1000);
     setTimeout(renderPlayerSprites, 2000);
+    setTimeout(() => $("html, body").animate({ scrollTop: "1000px" }), 6000);
   }
 
   const renderGameModal = () => {
@@ -149,6 +153,7 @@ const fetchAllPokemon = () => {
     let gameModal = $('.background-modal')[0];
 
     gameModal.appendChild(gameScreen);
+    setTimeout(() => $("html, body").animate({ scrollTop: "0px" }), 2000);
     setTimeout(expandGameScreen, 1000);
   }
 
@@ -260,6 +265,7 @@ const fetchAllPokemon = () => {
   const playPokemon = (pokemon) => {
 
     if (currentPokemonP1 === null){
+      currentPokemonP1 = pokemon;
       fetchPokemonTweets(pokemon).then((tweetsP1) =>
       {
         currentPokemonP1Tweets = tweetsP1.tweets;
@@ -288,18 +294,63 @@ const fetchAllPokemon = () => {
     optionsContainer.setAttribute("class", "options-container");
     let header = document.createElement("h3");
     header.innerHTML = "SELECT A TWEET ATTACK!";
+
     optionsContainer.appendChild(header);
 
-    randomTweets.forEach((tweet) => {
-      let tweetItem = renderTweet(tweet);
-      optionsContainer.appendChild(tweetItem);
-    });
+    let nextBtn = document.createElement("img");
+    nextBtn.setAttribute("class", "next-btn");
+    nextBtn.src = "https://vignette1.wikia.nocookie.net/pokemongo/images/1/1b/Button_Next.png/revision/latest?cb=20160908143000";
+    nextBtn.addEventListener("click", switchOutTweet);
+    optionsContainer.appendChild(nextBtn);
+
+    currentRandomTweets = randomTweets;
+    let tweetItem = renderTweet(currentRandomTweets[0]);
+    optionsContainer.appendChild(tweetItem);
+    // randomTweets.forEach((tweet) => {
+    //   let tweetItem = renderTweet(tweet);
+    //   optionsContainer.appendChild(tweetItem);
+    // });
+
     background.appendChild(optionsContainer);
+  }
+
+  const switchOutTweet = () => {
+    let tweetContainer = document.getElementsByClassName("tweet-container")[0];
+    tweetContainer.setAttribute("class", "hide");
+    let optionsContainer = document.getElementsByClassName("options-container")[0];
+    let currentTweet = currentRandomTweets[0];
+    currentRandomTweets.shift();
+    currentRandomTweets.push(currentTweet);
+    let tweet = renderTweet(currentRandomTweets[0]);
+    setTimeout(() => optionsContainer.appendChild(tweet), 1000)
+    optionsContainer.appendChild(tweet);
+  }
+
+  const getTweetScore = (tweet) => {
+    fetchTweetTones(tweet).then((scores) =>
+    {
+      currentTweetScores = scores
+      calcScore(scores);
+     }
+    );
+  }
+
+  const calcScore = (score) => {
+    let tweetScores = score.scores;
+
+    let anger = tweetScores.anger.score;
+    let disgust = tweetScores.disgust.score;
+    let fear = tweetScores.fear.score;
+    let joy = tweetScores.joy.score;
+    let sadness = tweetScores.sadness.score;
+    console.log(currentPokemonP1);
+    debugger
   }
 
   const renderTweet = (tweet) => {
     let tweetContainer = document.createElement("div");
     tweetContainer.setAttribute("class", "tweet-container");
+    tweetContainer.addEventListener("click", () => getTweetScore(tweet));
     let tweetHeader = document.createElement("div");
     tweetHeader.setAttribute("class", "tweet-header");
 
@@ -307,16 +358,6 @@ const fetchAllPokemon = () => {
     tweetNameContainer.setAttribute("class", "tweet-name-container");
     let tweetImageContainer = document.createElement("div");
     tweetImageContainer.setAttribute("class", "tweet-image-container");
-
-
-    // let name = tweet.user.name;
-    // let username = tweet.user.screen_name;
-    // let profilePic = tweet.user.profile_image_url_https;
-    // let location = tweet.user.location;
-    // let text = tweet.text;
-    // let date = tweet.created_at;
-    // let favorites = tweet.favorite_count;
-    // let retweets = tweet.retweet_count;
 
     //TWEET NAME CONTAINER
       //tweet profile pic container

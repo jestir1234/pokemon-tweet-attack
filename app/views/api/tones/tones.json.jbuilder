@@ -1,1 +1,1 @@
-json.tweet_hash @tweet_hash 
+json.scores @scores
