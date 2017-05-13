@@ -487,3 +487,42 @@
 .tweet-container:active{
   transform: scale(.9);
 }
+
+.pokemon-gif{
+  border-radius: 5px;
+  position: absolute;
+  top: 20%;
+  left: 0px;
+  z-index: 50;
+  right: 0px;
+  margin: auto;
+  width: 300px;
+  -webkit-animation: fade-screen 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade-screen 2s; /* Firefox < 16 */
+        -ms-animation: fade-screen 2s; /* Internet Explorer */
+         -o-animation: fade-screen 2s; /* Opera < 12.1 */
+            animation: fade-screen 2s;
+}
+
+.attack-message{
+  border-radius: 5px;
+  position: absolute;
+  font-size: 40px;
+  color: red;
+  top: 15%;
+  left: 0px;
+  z-index: 51;
+  right: 0px;
+  margin: auto;
+  width: 600px;
+  -webkit-animation: slide-for-attack-message 1.5s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: slide-for-attack-message 1.5s; /* Firefox < 16 */
+        -ms-animation: slide-for-attack-message 1.5s; /* Internet Explorer */
+         -o-animation: slide-for-attack-message 1.5s; /* Opera < 11.1 */
+            animation: slide-for-attack-message 1.5s;
+}
+
+@keyframes slide-for-attack-message {
+  from { top: 0; }
+  to   { top: 15%; }
+}

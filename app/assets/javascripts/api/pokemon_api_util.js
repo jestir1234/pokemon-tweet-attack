@@ -13,6 +13,8 @@ let currentPokemonP1Tweets = null;
 let currentPokemonP2Tweets = null;
 let currentRandomTweets = null;
 let currentTweetScores = null;
+let currentPokemonInfo;
+let currentGif;
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
@@ -38,6 +40,13 @@ const fetchAllPokemon = () => {
       window.pokemon = allPokemon;
     }).then(() => generatePokemonList());
   })
+
+  const fetchPokemon = (id) => {
+    return $.ajax({
+      method: "GET",
+      url: `http://pokeapi.co/api/v2/pokemon/${id}/`,
+    }).then((info) => currentPokemonInfo = info);
+  }
 
   const fetchPokemonTweets = (pokemon) => {
     return $.ajax({
@@ -96,6 +105,16 @@ const fetchAllPokemon = () => {
       method: "POST",
       url: "api/tones",
       data: {tweet: tweet}
+    })
+  }
+
+  const fetchGif = (pokemon, attack) => {
+    return $.ajax({
+      method: "GET",
+      url: `http://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=dc6zaTOxFJmzC&limit=1`,
+      success: (gif) => {
+        currentGif = gif;
+      }
     })
   }
   //
@@ -265,6 +284,7 @@ const fetchAllPokemon = () => {
   const playPokemon = (pokemon) => {
 
     if (currentPokemonP1 === null){
+      fetchPokemon(pokemon['id']);
       currentPokemonP1 = pokemon;
       fetchPokemonTweets(pokemon).then((tweetsP1) =>
       {
@@ -330,21 +350,90 @@ const fetchAllPokemon = () => {
     fetchTweetTones(tweet).then((scores) =>
     {
       currentTweetScores = scores
-      calcScore(scores);
+      let emotion = calcScore(scores);
+      executeAttack(emotion);
      }
     );
   }
 
+  const executeAttack = (emotion) => {
+    let pokeMoves = currentPokemonInfo.moves;
+    let move;
+
+    if (emotion === "anger"){
+      let idx = Math.floor(Math.random() * 30);
+      move = pokeMoves[idx].move.name;
+    } else if (emotion === "disgust"){
+      move = "weird";
+    } else if (emotion === "fear"){
+      move = "scared";
+    } else if (emotion === "joy"){
+      let idx = Math.floor(Math.random() * 30);
+      move = pokeMoves[idx].move.name;
+    } else if (emotion === "sadness"){
+      move = "cry";
+    }
+    console.log(currentPokemonInfo);
+
+    fetchGif(currentPokemonP1['name'], move).then(() => renderAttack(move))
+  }
+
+  const renderAttack = (move) => {
+    let attackMessage = document.createElement("div");
+    let background = document.getElementsByClassName("background-modal")[0];
+    attackMessage.setAttribute("class", "attack-message");
+    attackMessage.innerHTML = `${currentPokemonP1['name']} uses ${move}!`;
+
+    $("html, body").animate({ scrollTop: "0px" });
+    background.appendChild(attackMessage);
+
+    let gif = document.createElement("img");
+    gif.setAttribute("class", "pokemon-gif");
+    let url = "https://media.giphy.com/media/" + currentGif.data[0].embed_url.slice(23) + "/giphy.gif";
+
+    gif.src = url;
+    background.appendChild(gif);
+    setTimeout(() => background.removeChild(gif), 5000);
+    setTimeout(() => background.removeChild(attackMessage), 5000);
+  }
+
+
+
   const calcScore = (score) => {
     let tweetScores = score.scores;
 
+    let highest = 0;
+
     let anger = tweetScores.anger.score;
+
+    if (anger > highest) {
+      highest = "anger";
+    }
+
     let disgust = tweetScores.disgust.score;
+
+    if (disgust > highest){
+      highest = "disgust"
+    }
+
     let fear = tweetScores.fear.score;
+
+    if (fear > highest) {
+      highest = "fear";
+    }
+
     let joy = tweetScores.joy.score;
+
+    if (joy > highest) {
+      highest = "joy";
+    }
+
     let sadness = tweetScores.sadness.score;
-    console.log(currentPokemonP1);
-    debugger
+
+    if (sadness > highest){
+      highest = "sadness";
+    }
+    return highest
   }
 
   const renderTweet = (tweet) => {
