@@ -14,7 +14,7 @@ let currentPokemonP2Tweets = null;
 let currentRandomTweets = null;
 let currentTweetScores = null;
 let currentPokemonInfo;
-let currentGif;
+let currentGifs;
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
@@ -111,9 +111,9 @@ const fetchAllPokemon = () => {
   const fetchGif = (pokemon, attack) => {
     return $.ajax({
       method: "GET",
-      url: `http://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=dc6zaTOxFJmzC&limit=1`,
-      success: (gif) => {
-        currentGif = gif;
+      url: `http://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=dc6zaTOxFJmzC`,
+      success: (gifs) => {
+        currentGifs = gifs;
       }
     })
   }
@@ -378,6 +378,12 @@ const fetchAllPokemon = () => {
     fetchGif(currentPokemonP1['name'], move).then(() => renderAttack(move))
   }
 
+  const selectRandomGif = (gifs) => {
+    let idx = Math.floor(Math.random() * gifs.length);
+    return gifs[idx];
+  }
+
+
   const renderAttack = (move) => {
     let attackMessage = document.createElement("div");
     let background = document.getElementsByClassName("background-modal")[0];
@@ -386,10 +392,11 @@ const fetchAllPokemon = () => {
 
     $("html, body").animate({ scrollTop: "0px" });
     background.appendChild(attackMessage);
-
+    let randomGif = selectRandomGif(currentGifs.data);
+    
     let gif = document.createElement("img");
     gif.setAttribute("class", "pokemon-gif");
-    let url = "https://media.giphy.com/media/" + currentGif.data[0].embed_url.slice(23) + "/giphy.gif";
+    let url = "https://media.giphy.com/media/" + randomGif.embed_url.slice(23) + "/giphy.gif";
 
     gif.src = url;
     background.appendChild(gif);

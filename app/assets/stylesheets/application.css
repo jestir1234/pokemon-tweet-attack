@@ -505,16 +505,19 @@
 }
 
 .attack-message{
+  -webkit-text-stroke-width: 1px;
+   -webkit-text-stroke-color: black;
+  text-shadow: 4px 1px 0px rgba(208, 107, 150, 1);
   border-radius: 5px;
   position: absolute;
   font-size: 40px;
   color: red;
-  top: 15%;
-  left: 0px;
+  top: 38%;
+  left: 40%;
   z-index: 51;
   right: 0px;
   margin: auto;
-  width: 600px;
+  width: 800px;
   -webkit-animation: slide-for-attack-message 1.5s; /* Safari, Chrome and Opera > 12.1 */
        -moz-animation: slide-for-attack-message 1.5s; /* Firefox < 16 */
         -ms-animation: slide-for-attack-message 1.5s; /* Internet Explorer */
@@ -524,5 +527,5 @@
 
 @keyframes slide-for-attack-message {
   from { top: 0; }
-  to   { top: 15%; }
+  to   { top: 38%; }
 }
