@@ -6,13 +6,13 @@ class Api::TonesController < ApplicationController
   def create
 
     tweet = params[:tweet]
-    
+
 
       response = Excon.post("https://gateway.watsonplatform.net/tone-analyzer/api/v3/tone?version=2016-05-19&tones=emotion",
       body: "{\"text\": \"#{tweet['text']}\"}",
       headers: {"Content-Type": "application/json"},
-      user: "488a13ab-74ff-4e28-9912-79ecc6ee1b42",
-      password: "huU2FUValy05"
+      user: ENV['ibm_user'],
+      password: ENV['ibm_password']
       )
       scores = JSON.parse(response.body)
 
