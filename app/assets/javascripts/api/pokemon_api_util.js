@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(e){
 console.log("dom is fully loaded, pokemon util running");
 
-// const canvas = d3.select("body").append("svg").attr("width", 1000).attr("height", 1000);
-
 let pokemon = [];
 let currentTeam = [];
 let opponentTeam = [];
@@ -18,6 +16,8 @@ let currentPokemonInfoP2;
 let currentGifs;
 let player1PokemonStats = {};
 let player2PokemonStats = {};
+let currentMove;
+let currentAttackingPokemon;
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
@@ -66,6 +66,16 @@ const fetchAllPokemon = () => {
       });
   }
 
+  const fetchPokemonMove = (url) => {
+    return $.ajax({
+      method: "GET",
+      url: `${url}`,
+    }).then((info) =>  {
+      currentMove = info
+    }
+    )
+  }
+
   const generatePokemonList = () => {
     let list = $('#pokemon-list');
     let samplePokemon = [];
@@ -84,10 +94,8 @@ const fetchAllPokemon = () => {
 
       pokeItem.addEventListener("click", (e) => addPokemonToTeam(pokemon));
 
-      // description.innerHTML = `${name} tweets: ${pokemon.search_results.tweet_count} sample: ${pokemon.search_results.tweets[0].text}`;
       img.src = pokemon['image_url'];
       pokeItem.appendChild(img);
-      // pokeItem.appendChild(description);
       list.append(pokeItem);
     });
   }
@@ -127,15 +135,6 @@ const fetchAllPokemon = () => {
       }
     })
   }
-  //
-  // const addPokemonData = () => {
-  //   let circles = canvas.selectAll("circle")
-  //   .data(window.pokemon)
-  //   .enter()
-  //   .append("circle")
-  //   .attr("width", 100)
-  //   .attr("height", 100)
-  // }
 
   const stopFunction = (interval) => {
     clearInterval(interval);
@@ -224,7 +223,15 @@ const fetchAllPokemon = () => {
 
   const opponentSelectRandomPokemon = () => {
     let idx = Math.floor(Math.random() * opponentTeam.length);
-    fetchPokemonOpponent(opponentTeam[idx].id)
+    fetchPokemonOpponent(opponentTeam[idx].id).then(() => {
+      let health = currentPokemonInfoP2.stats[5].base_stat + currentPokemonInfoP2.base_experience;
+      let attack = currentPokemonInfoP2.stats[4].base_stat
+      let defense = currentPokemonInfoP2.stats[3].base_stat
+      let speed = currentPokemonInfoP2.stats[0].base_stat
+      player2PokemonStats[currentPokemonInfoP2.name] = {health: health, attack: attack, defense: defense, speed: speed}
+      console.log("player 2 pokemon is...")
+      console.log(currentPokemonInfoP2)
+    })
     return opponentTeam[idx];
   }
 
@@ -251,7 +258,6 @@ const fetchAllPokemon = () => {
       setTimeout(() => waitingArea2.appendChild(pokeImage2), 1000);
     });
 
-    // renderSelectPokemonText();
   }
 
 
@@ -299,10 +305,6 @@ const fetchAllPokemon = () => {
   let p2HealthBarAttr;
 
   const animateHealthBar = (player) => {
-    // let healthBar = document.getElementById("p1");
-    // let currentWidth = parseInt(healthBar.style.width.slice(0, healthBar.style.width.length - 2));
-    // currentWidth += 5;
-    // healthBar.style.width = currentWidth.toString() + "px";
     if (player === "player1"){
       p1HealthBar += 1;
       let canvas = document.getElementById("gamescreen-canvas");
@@ -330,13 +332,6 @@ const fetchAllPokemon = () => {
   }
 
   const generateHealthBar = (player) => {
-    // let healthBar = document.createElement("div");
-    // let background = document.getElementsByClassName('background-modal')[0];
-    // healthBar.setAttribute("class", "health-bar");
-    // healthBar.setAttribute("id", p1);
-    // healthBar.style.background = "#b20098";
-    // healthBar.style.width = "10px";
-    // background.appendChild(healthBar);
     let interval = setInterval(() => animateHealthBar(player), 50);
     setTimeout(() => clearInterval(interval), 4000);
   }
@@ -350,6 +345,8 @@ const fetchAllPokemon = () => {
       let defense = currentPokemonInfoP1.stats[3].base_stat
       let speed = currentPokemonInfoP1.stats[0].base_stat
       player1PokemonStats[currentPokemonInfoP1.name] = {health: health, attack: attack, defense: defense, speed: speed}
+      currentAttackingPokemon = {'name': currentPokemonInfoP1.name, 'player': "player1", "pokemon": player1PokemonStats[currentPokemonInfoP1.name]};
+      console.log("player 1 pokemon is...")
       console.log(currentPokemonInfoP1)
       }
     );
@@ -394,11 +391,6 @@ const fetchAllPokemon = () => {
     currentRandomTweets = randomTweets;
     let tweetItem = renderTweet(currentRandomTweets[0]);
     optionsContainer.appendChild(tweetItem);
-    // randomTweets.forEach((tweet) => {
-    //   let tweetItem = renderTweet(tweet);
-    //   optionsContainer.appendChild(tweetItem);
-    // });
-
     background.appendChild(optionsContainer);
   }
 
@@ -431,6 +423,12 @@ const fetchAllPokemon = () => {
     if (emotion === "anger"){
       let idx = Math.floor(Math.random() * 30);
       move = pokeMoves[idx].move.name;
+      fetchPokemonMove(pokeMoves[idx].move.url)
+      .then(() => {
+        calcAttack();
+        console.log("got move");
+      }
+    );
     } else if (emotion === "disgust"){
       move = "weird";
     } else if (emotion === "fear"){
@@ -438,17 +436,32 @@ const fetchAllPokemon = () => {
     } else if (emotion === "joy"){
       let idx = Math.floor(Math.random() * 30);
       move = pokeMoves[idx].move.name;
+      debugger
     } else if (emotion === "sadness"){
       move = "cry";
     }
-    console.log(currentPokemonInfoP1);
 
-    fetchGif(currentPokemonP1['name'], move).then(() => renderAttack(move))
+    fetchGif(currentAttackingPokemon['name'], move).then(() => renderAttack(move))
   }
 
   const selectRandomGif = (gifs) => {
     let idx = Math.floor(Math.random() * gifs.length);
     return gifs[idx];
+  }
+
+  const calcAttack = () => {
+    let attack = currentAttackingPokemon.pokemon.attack;
+    let chance = Math.floor(Math.random() * 100);
+    console.log(currentMove);
+    
+    let power = currentMove.power;
+    let hit = currentMove.accuracy >= chance ? true : false;
+    let totalDmg = attack + power;
+
+    if (currentAttackingPokemon.player === "player1"){
+      console.log(player2PokemonStats);
+      debugger
+    }
   }
 
 
