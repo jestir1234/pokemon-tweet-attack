@@ -234,7 +234,7 @@ const fetchAllPokemon = () => {
       console.log(currentPokemonInfoP2)
       fetchPokemonTweets(opponentTeam[idx]).then((tweets) => {
         player2PokemonStats[currentPokemonInfoP2.name]['tweets'] = tweets.tweets;
-        setTimeout(() => renderPokemonOntoField(opponentTeam[idx], "player2"), 5000);
+        setTimeout(() => renderPokemonOntoField(opponentTeam[idx], "player2"), 3000);
       });
     })
   }
@@ -248,8 +248,9 @@ const fetchAllPokemon = () => {
         $('.tweet-container').trigger('click');
       }, 4000)
     } else {
-
       opponentSelectRandomPokemon();
+      setTimeout(() => opponentPlayTurn(), 6000);
+
     }
   }
 
