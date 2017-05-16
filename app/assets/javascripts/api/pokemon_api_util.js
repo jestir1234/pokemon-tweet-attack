@@ -13,8 +13,11 @@ let currentPokemonP1Tweets = null;
 let currentPokemonP2Tweets = null;
 let currentRandomTweets = null;
 let currentTweetScores = null;
-let currentPokemonInfo;
+let currentPokemonInfoP1;
+let currentPokemonInfoP2;
 let currentGifs;
+let player1PokemonStats = {};
+let player2PokemonStats = {};
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
@@ -45,7 +48,14 @@ const fetchAllPokemon = () => {
     return $.ajax({
       method: "GET",
       url: `http://pokeapi.co/api/v2/pokemon/${id}/`,
-    }).then((info) => currentPokemonInfo = info);
+    }).then((info) => currentPokemonInfoP1 = info);
+  }
+
+  const fetchPokemonOpponent = (id) => {
+    return $.ajax({
+      method: "GET",
+      url: `http://pokeapi.co/api/v2/pokemon/${id}/`,
+    }).then((info) => currentPokemonInfoP2 = info);
   }
 
   const fetchPokemonTweets = (pokemon) => {
@@ -137,12 +147,13 @@ const fetchAllPokemon = () => {
   }
 
   const expandGameScreen = () => {
+    renderSelectPokemonText();
     let expandWindowInterval = setInterval(increaseWidth, 10);
 
     setTimeout(() => stopFunction(expandWindowInterval), 500);
     setTimeout(drawPokeballs, 1000);
     setTimeout(renderPlayerSprites, 2000);
-    setTimeout(() => $("html, body").animate({ scrollTop: "1000px" }), 6000);
+    setTimeout(() => $("html, body").animate({ scrollTop: "1000px" }), 4000);
   }
 
   const renderGameModal = () => {
@@ -172,7 +183,7 @@ const fetchAllPokemon = () => {
     let gameModal = $('.background-modal')[0];
 
     gameModal.appendChild(gameScreen);
-    setTimeout(() => $("html, body").animate({ scrollTop: "0px" }), 2000);
+    setTimeout(() => $("html, body").animate({ scrollTop: "0px" }), 500);
     setTimeout(expandGameScreen, 1000);
   }
 
@@ -213,6 +224,7 @@ const fetchAllPokemon = () => {
 
   const opponentSelectRandomPokemon = () => {
     let idx = Math.floor(Math.random() * opponentTeam.length);
+    fetchPokemonOpponent(opponentTeam[idx].id)
     return opponentTeam[idx];
   }
 
@@ -239,7 +251,7 @@ const fetchAllPokemon = () => {
       setTimeout(() => waitingArea2.appendChild(pokeImage2), 1000);
     });
 
-    renderSelectPokemonText();
+    // renderSelectPokemonText();
   }
 
 
@@ -281,10 +293,66 @@ const fetchAllPokemon = () => {
     setTimeout(redrawCanvas, 3300);
   }
 
+  let p1HealthBar = 1;
+  let p1HealthBarAttr;
+  let p2HealthBar = 1;
+  let p2HealthBarAttr;
+
+  const animateHealthBar = (player) => {
+    // let healthBar = document.getElementById("p1");
+    // let currentWidth = parseInt(healthBar.style.width.slice(0, healthBar.style.width.length - 2));
+    // currentWidth += 5;
+    // healthBar.style.width = currentWidth.toString() + "px";
+    if (player === "player1"){
+      p1HealthBar += 1;
+      let canvas = document.getElementById("gamescreen-canvas");
+      let ctx = canvas.getContext("2d");
+      ctx.beginPath();
+      ctx.lineWidth="4";
+      ctx.strokeStyle="green";
+
+      ctx.rect(10,30,0 + p1HealthBar,1);
+      p1HealthBarAttr = {x: 10, y: 30, width: p1HealthBar, height: 1}
+      ctx.stroke();
+    } else if (player === "player2"){
+      p2HealthBar += 1;
+      let canvas = document.getElementById("gamescreen-canvas");
+      let ctx = canvas.getContext("2d");
+      ctx.beginPath();
+      ctx.lineWidth="4";
+      ctx.strokeStyle="green";
+
+      ctx.rect(338 - p2HealthBar,30, 0 + p2HealthBar,1);
+      p2HealthBarAttr = {x: 360 - p2HealthBar, y: 30, width: p2HealthBar, height: 1}
+      ctx.stroke();
+    }
+
+  }
+
+  const generateHealthBar = (player) => {
+    // let healthBar = document.createElement("div");
+    // let background = document.getElementsByClassName('background-modal')[0];
+    // healthBar.setAttribute("class", "health-bar");
+    // healthBar.setAttribute("id", p1);
+    // healthBar.style.background = "#b20098";
+    // healthBar.style.width = "10px";
+    // background.appendChild(healthBar);
+    let interval = setInterval(() => animateHealthBar(player), 50);
+    setTimeout(() => clearInterval(interval), 4000);
+  }
+
   const playPokemon = (pokemon) => {
 
     if (currentPokemonP1 === null){
-      fetchPokemon(pokemon['id']);
+      fetchPokemon(pokemon['id']).then(() => {
+      let health = currentPokemonInfoP1.stats[5].base_stat + currentPokemonInfoP1.base_experience;
+      let attack = currentPokemonInfoP1.stats[4].base_stat
+      let defense = currentPokemonInfoP1.stats[3].base_stat
+      let speed = currentPokemonInfoP1.stats[0].base_stat
+      player1PokemonStats[currentPokemonInfoP1.name] = {health: health, attack: attack, defense: defense, speed: speed}
+      console.log(currentPokemonInfoP1)
+      }
+    );
       currentPokemonP1 = pokemon;
       fetchPokemonTweets(pokemon).then((tweetsP1) =>
       {
@@ -357,7 +425,7 @@ const fetchAllPokemon = () => {
   }
 
   const executeAttack = (emotion) => {
-    let pokeMoves = currentPokemonInfo.moves;
+    let pokeMoves = currentPokemonInfoP1.moves;
     let move;
 
     if (emotion === "anger"){
@@ -373,7 +441,7 @@ const fetchAllPokemon = () => {
     } else if (emotion === "sadness"){
       move = "cry";
     }
-    console.log(currentPokemonInfo);
+    console.log(currentPokemonInfoP1);
 
     fetchGif(currentPokemonP1['name'], move).then(() => renderAttack(move))
   }
@@ -393,7 +461,7 @@ const fetchAllPokemon = () => {
     $("html, body").animate({ scrollTop: "0px" });
     background.appendChild(attackMessage);
     let randomGif = selectRandomGif(currentGifs.data);
-    
+
     let gif = document.createElement("img");
     gif.setAttribute("class", "pokemon-gif");
     let url = "https://media.giphy.com/media/" + randomGif.embed_url.slice(23) + "/giphy.gif";
@@ -401,8 +469,23 @@ const fetchAllPokemon = () => {
     gif.src = url;
     background.appendChild(gif);
     setTimeout(() => background.removeChild(gif), 5000);
+    setTimeout(() => fade(attackMessage), 2000);
     setTimeout(() => background.removeChild(attackMessage), 5000);
   }
+
+
+  function fade(element) {
+    var op = 1;  // initial opacity
+    var timer = setInterval(function () {
+        if (op <= 0.1){
+            clearInterval(timer);
+            element.style.display = 'none';
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op -= op * 0.1;
+    }, 100);
+}
 
 
 
@@ -411,7 +494,7 @@ const fetchAllPokemon = () => {
 
     let highest = 0;
 
-    let anger = tweetScores.anger.score;
+    let anger = tweetScores.anger ? tweetScores.anger.score : 0;
 
     if (anger > highest) {
       highest = "anger";
@@ -527,6 +610,9 @@ const fetchAllPokemon = () => {
   }
 
   const renderPokemonOntoField = (pokemon, player) => {
+    setTimeout(() => $("html, body").animate({ scrollTop: "0" }), 500);
+    generateHealthBar(player);
+
     let pokeballGifClass;
     let smokeGifClass;
     let pokemonGifClass;

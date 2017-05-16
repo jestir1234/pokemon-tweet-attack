@@ -507,14 +507,16 @@
 .attack-message{
   -webkit-text-stroke-width: 1px;
    -webkit-text-stroke-color: black;
-  text-shadow: 4px 1px 0px rgba(208, 107, 150, 1);
+ text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff0080, 0 0 30px #ff0080, 0 0 40px #ff0080, 0 0 55px #ff0080, 0 0 75px #ff0080;
+ text-align: center;
   border-radius: 5px;
   position: absolute;
   font-size: 40px;
-  color: red;
+  font-family: 'Futura';
+  color: #e800f6;
   top: 38%;
-  left: 40%;
   z-index: 51;
+  left: 0px;
   right: 0px;
   margin: auto;
   width: 800px;
@@ -528,4 +530,16 @@
 @keyframes slide-for-attack-message {
   from { top: 0; }
   to   { top: 38%; }
+}
+
+.health-bar{
+  opacity: .8;
+  max-width: 30%;
+  z-index: 35;
+  border-radius: 5px;
+  border: 1px solid silver;
+  top: 15.5%;
+  left: 7%;
+  height: 18px;
+  position: absolute;
 }
