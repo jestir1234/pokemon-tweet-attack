@@ -120,8 +120,7 @@
   background-color: rgba(0,0,255,0.6);
   z-index: 2;
   position: absolute;
-  /*top: 0;
-  bottom: 0;*/
+  overflow: hidden;
   left: 0;
   right: 0;
   -webkit-animation: fade 2s; /* Safari, Chrome and Opera > 12.1 */
@@ -542,4 +541,25 @@
   left: 7%;
   height: 18px;
   position: absolute;
+}
+
+#invert-img{
+  -webkit-filter: invert(1);
+  filter: invert(1);
+}
+
+#invert-img-half{
+  -webkit-filter: invert(.5);
+  filter: invert(.5);
+}
+
+#invert-img-quarter{
+  -webkit-filter: invert(.25);
+  filter: invert(.25);
+}
+
+
+#invert-img-none{
+  -webkit-filter: invert(0);
+  filter: invert(0);
 }

@@ -7,8 +7,7 @@ let opponentTeam = [];
 let onP1 = null;
 let currentPokemonP1 = null;
 let currentPokemonP2 = null;
-let currentPokemonP1Tweets = null;
-let currentPokemonP2Tweets = null;
+
 let currentRandomTweets = null;
 let currentTweetScores = null;
 let currentPokemonInfoP1;
@@ -18,6 +17,7 @@ let player1PokemonStats = {};
 let player2PokemonStats = {};
 let currentMove;
 let currentAttackingPokemon;
+let currentTurnPlayer = "player1";
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
@@ -217,8 +217,8 @@ const fetchAllPokemon = () => {
     background.appendChild(player2);
     renderPlayerPokemon();
 
-    let opponentPokemon = opponentSelectRandomPokemon();
-    setTimeout(() => renderPokemonOntoField(opponentPokemon, "player2"), 5000);
+    opponentSelectRandomPokemon();
+
   }
 
   const opponentSelectRandomPokemon = () => {
@@ -228,11 +228,29 @@ const fetchAllPokemon = () => {
       let attack = currentPokemonInfoP2.stats[4].base_stat
       let defense = currentPokemonInfoP2.stats[3].base_stat
       let speed = currentPokemonInfoP2.stats[0].base_stat
-      player2PokemonStats[currentPokemonInfoP2.name] = {health: health, attack: attack, defense: defense, speed: speed}
+      player2PokemonStats[currentPokemonInfoP2.name] = {totalHP: health, currentHP: health, attack: attack, defense: defense, speed: speed, name: currentPokemonInfoP2.name, id: currentPokemonInfoP2.id};
+      currentPokemonP2 = player2PokemonStats[currentPokemonInfoP2.name];
       console.log("player 2 pokemon is...")
       console.log(currentPokemonInfoP2)
+      fetchPokemonTweets(opponentTeam[idx]).then((tweets) => {
+        player2PokemonStats[currentPokemonInfoP2.name]['tweets'] = tweets.tweets;
+        setTimeout(() => renderPokemonOntoField(opponentTeam[idx], "player2"), 5000);
+      });
     })
-    return opponentTeam[idx];
+  }
+
+  const opponentPlayTurn = () => {
+
+    if (currentPokemonP2){
+      currentAttackingPokemon = {'name': currentPokemonInfoP2.name, 'player': "player2", "pokemon": player2PokemonStats[currentPokemonInfoP2.name]};
+      renderTweetOptions(player2PokemonStats[currentPokemonP2.name]['tweets'])
+      setTimeout(() => {
+        $('.tweet-container').trigger('click');
+      }, 4000)
+    } else {
+
+      opponentSelectRandomPokemon();
+    }
   }
 
   const renderPlayerPokemon = () => {
@@ -266,6 +284,45 @@ const fetchAllPokemon = () => {
     let ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawPokeballs();
+    drawHealthBars(ctx);
+  }
+
+  const drawHealthBars = (ctx) => {
+
+    ctx.beginPath();
+    if (p1HealthBarAttr){
+      if (p1HealthBarAttr.width < 50 && p1HealthBarAttr.width > 25){
+        ctx.strokeStyle = 'orange';
+      } else if (p1HealthBarAttr.width < 25){
+        ctx.strokeStyle = 'red';
+      } else {
+        ctx.strokeStyle = 'green';
+      }
+      if (p1HealthBarAttr.width <= 1){
+        p1HealthBarAttr = {x: p1HealthBarAttr.x, y: p1HealthBarAttr.y, width: p1HealthBarAttr.width, height: 0};
+      }
+      ctx.strokeRect(p1HealthBarAttr.x, p1HealthBarAttr.y, p1HealthBarAttr.width, p1HealthBarAttr.height);
+    }
+
+
+    ctx.beginPath();
+
+    if (p2HealthBarAttr){
+      console.log("p2HealthBarAttr is....")
+      console.log(p2HealthBarAttr)
+      if (p2HealthBarAttr.width < 50 && p2HealthBarAttr.width > 25){
+        ctx.strokeStyle = 'orange';
+      } else if (p2HealthBarAttr.width < 25){
+        ctx.strokeStyle = 'red';
+      } else {
+        ctx.strokeStyle = 'green';
+      }
+      if (p2HealthBarAttr.width <= 1){
+        p2HealthBarAttr = {x: p2HealthBarAttr.x, y: p2HealthBarAttr.y, width: p2HealthBarAttr.width, height: 0};
+      }
+      ctx.strokeRect(p2HealthBarAttr.x, p2HealthBarAttr.y, p2HealthBarAttr.width, p2HealthBarAttr.height);
+    }
+
   }
 
   const renderSelectPokemonText = () => {
@@ -306,29 +363,82 @@ const fetchAllPokemon = () => {
 
   const animateHealthBar = (player) => {
     if (player === "player1"){
+      let hpPercentage = currentPokemonP1.currentHP / currentPokemonP1.totalHP;
+      let currentHPBarWidth = 80 * hpPercentage;
       p1HealthBar += 1;
       let canvas = document.getElementById("gamescreen-canvas");
       let ctx = canvas.getContext("2d");
       ctx.beginPath();
       ctx.lineWidth="4";
       ctx.strokeStyle="green";
-
-      ctx.rect(10,30,0 + p1HealthBar,1);
-      p1HealthBarAttr = {x: 10, y: 30, width: p1HealthBar, height: 1}
-      ctx.stroke();
+      if (p1HealthBar < currentHPBarWidth){
+        ctx.rect(10,30,0 + p1HealthBar,1);
+        p1HealthBarAttr = {x: 10, y: 30, width: p1HealthBar, height: 1}
+        ctx.stroke();
+      }
     } else if (player === "player2"){
+      let hpPercentage = currentPokemonP2.currentHP / currentPokemonP2.totalHP;
+      let currentHPBarWidth = 80 * hpPercentage;
       p2HealthBar += 1;
       let canvas = document.getElementById("gamescreen-canvas");
       let ctx = canvas.getContext("2d");
       ctx.beginPath();
       ctx.lineWidth="4";
       ctx.strokeStyle="green";
-
-      ctx.rect(338 - p2HealthBar,30, 0 + p2HealthBar,1);
-      p2HealthBarAttr = {x: 360 - p2HealthBar, y: 30, width: p2HealthBar, height: 1}
-      ctx.stroke();
+      if (p2HealthBar < currentHPBarWidth) {
+        ctx.rect(338 - p2HealthBar,30, 0 + p2HealthBar,1);
+        p2HealthBarAttr = {x: 360 - p2HealthBar, y: 30, width: p2HealthBar, height: 1}
+        ctx.stroke();
+      }
     }
 
+  }
+
+  const animateHealthBarDamage = (player, prevHP, defender) => {
+    let canvas = document.getElementById("gamescreen-canvas");
+    let ctx = canvas.getContext("2d");
+    ctx.beginPath();
+    ctx.lineWidth="4";
+    ctx.strokeStyle="green";
+
+    if (player === "player1"){
+      let newHpPercentage = defender.currentHP / defender.totalHP;
+      let prevHpPercentage = prevHP / defender.totalHP;
+      let currentHPBarWidth = Math.floor(80 * newHpPercentage);
+      // console.log(currentHPBarWidth);
+      // console.log(prevHpPercentage);
+      if (prevHpPercentage >= 1){
+        p2HealthBarAttr = {x: 255, y: p2HealthBarAttr.y, width: p2HealthBarAttr.width, height: p2HealthBarAttr.height};
+      }
+      let animationInterval = setInterval(() => {
+        if (p2HealthBarAttr.width >= currentHPBarWidth && p2HealthBarAttr.width >= 1){
+          // console.log(currentHPBarWidth);
+          // console.log(p2HealthBarAttr);
+          p2HealthBarAttr = {x: p2HealthBarAttr.x + 1, y: p2HealthBarAttr.y, width: p2HealthBarAttr.width - 1, height: p2HealthBarAttr.height};
+          redrawCanvas();
+        }
+      }, 50);
+      setTimeout(() => clearInterval(animationInterval), 4000);
+    } else {
+      let newHpPercentage = defender.currentHP / defender.totalHP;
+      let prevHpPercentage = prevHP / defender.totalHP;
+      let currentHPBarWidth = Math.floor(80 * newHpPercentage);
+      console.log(currentHPBarWidth);
+      console.log(prevHpPercentage);
+      if (prevHpPercentage >= 1){
+        p1HealthBarAttr = {x: 10, y: p1HealthBarAttr.y, width: p1HealthBarAttr.width, height: p1HealthBarAttr.height};
+      }
+
+      let animationInterval = setInterval(() => {
+        if (p1HealthBarAttr.width >= currentHPBarWidth && p1HealthBarAttr.width >= 1){
+          console.log(currentHPBarWidth);
+          console.log(p2HealthBarAttr);
+          p1HealthBarAttr = {x: p1HealthBarAttr.x, y: p1HealthBarAttr.y, width: p1HealthBarAttr.width - 1, height: p1HealthBarAttr.height};
+          redrawCanvas();
+        }
+      }, 50);
+      setTimeout(() => clearInterval(animationInterval), 4000);
+    }
   }
 
   const generateHealthBar = (player) => {
@@ -338,25 +448,25 @@ const fetchAllPokemon = () => {
 
   const playPokemon = (pokemon) => {
 
-    if (currentPokemonP1 === null){
+    if (currentPokemonP1 === null && currentTurnPlayer === "player1"){
       fetchPokemon(pokemon['id']).then(() => {
       let health = currentPokemonInfoP1.stats[5].base_stat + currentPokemonInfoP1.base_experience;
       let attack = currentPokemonInfoP1.stats[4].base_stat
       let defense = currentPokemonInfoP1.stats[3].base_stat
       let speed = currentPokemonInfoP1.stats[0].base_stat
-      player1PokemonStats[currentPokemonInfoP1.name] = {health: health, attack: attack, defense: defense, speed: speed}
+      player1PokemonStats[currentPokemonInfoP1.name] = {totalHP: health, currentHP: health, attack: attack, defense: defense, speed: speed, name: currentPokemonInfoP1.name, id: currentPokemonInfoP1.id};
+      currentPokemonP1 = player1PokemonStats[currentPokemonInfoP1.name];
       currentAttackingPokemon = {'name': currentPokemonInfoP1.name, 'player': "player1", "pokemon": player1PokemonStats[currentPokemonInfoP1.name]};
+      renderPokemonOntoField(pokemon, "player1");
       console.log("player 1 pokemon is...")
       console.log(currentPokemonInfoP1)
+      fetchPokemonTweets(pokemon).then((tweets) =>
+      {
+        player1PokemonStats[currentPokemonInfoP1.name]['tweets'] = tweets.tweets;
+        renderTweetOptions(tweets.tweets);
+      });
       }
     );
-      currentPokemonP1 = pokemon;
-      fetchPokemonTweets(pokemon).then((tweetsP1) =>
-      {
-        currentPokemonP1Tweets = tweetsP1.tweets;
-        renderTweetOptions(tweetsP1.tweets);
-      });
-      renderPokemonOntoField(pokemon, "player1");
     }
   }
 
@@ -417,7 +527,13 @@ const fetchAllPokemon = () => {
   }
 
   const executeAttack = (emotion) => {
-    let pokeMoves = currentPokemonInfoP1.moves;
+
+    let pokeMoves
+    if (currentTurnPlayer === "player1"){
+      pokeMoves = currentPokemonInfoP1.moves;
+    } else {
+      pokeMoves = currentPokemonInfoP2.moves;
+    }
     let move;
 
     if (emotion === "anger"){
@@ -436,7 +552,12 @@ const fetchAllPokemon = () => {
     } else if (emotion === "joy"){
       let idx = Math.floor(Math.random() * 30);
       move = pokeMoves[idx].move.name;
-      debugger
+      fetchPokemonMove(pokeMoves[idx].move.url)
+      .then(() => {
+        calcAttack();
+        console.log("got move");
+      }
+    );
     } else if (emotion === "sadness"){
       move = "cry";
     }
@@ -453,14 +574,120 @@ const fetchAllPokemon = () => {
     let attack = currentAttackingPokemon.pokemon.attack;
     let chance = Math.floor(Math.random() * 100);
     console.log(currentMove);
-    
+
     let power = currentMove.power;
     let hit = currentMove.accuracy >= chance ? true : false;
     let totalDmg = attack + power;
 
     if (currentAttackingPokemon.player === "player1"){
-      console.log(player2PokemonStats);
-      debugger
+      let prevHP = player2PokemonStats[currentPokemonInfoP2.name].currentHP;
+      player2PokemonStats[currentPokemonInfoP2.name].currentHP -= (totalDmg - player2PokemonStats[currentPokemonInfoP2.name].defense)
+      if (player2PokemonStats[currentPokemonInfoP2.name].currentHP <= 0){
+        currentPokemonP2 = null;
+      }
+      setTimeout(() => renderDamage(currentAttackingPokemon.player, prevHP, player2PokemonStats[currentPokemonInfoP2.name]), 3000);
+    } else {
+      let prevHP = player1PokemonStats[currentPokemonInfoP1.name].currentHP;
+      player1PokemonStats[currentPokemonInfoP1.name].currentHP -= (totalDmg - player1PokemonStats[currentPokemonInfoP1.name].defense)
+      if (player1PokemonStats[currentPokemonInfoP1.name].currentHP <= 0){
+        currentPokemonP1 = null;
+      }
+      setTimeout(() => renderDamage(currentAttackingPokemon.player, prevHP, player1PokemonStats[currentPokemonInfoP1.name]), 3000);
+    }
+  }
+
+  const renderDamage = (player, prevHP, defender) => {
+    if (currentAttackingPokemon.player === "player1"){
+      let gif = document.getElementsByClassName("pokemon-gif-p2")[0];
+      let invertInterval = setInterval(() => gif.setAttribute("id", "invert-img"), 200);
+      let normInterval = setInterval(() => gif.setAttribute("id", "invert-img-none"), 400);
+      animateHealthBarDamage(player, prevHP, defender);
+      setTimeout(() => clearInterval(invertInterval), 2000);
+      setTimeout(() => clearInterval(normInterval), 2400);
+      if (defender.currentHP <= 0){
+        setTimeout(() => renderDeathAnimation(defender, player), 3500);
+      }
+    } else {
+      let gif = document.getElementsByClassName("pokemon-gif-p1")[0];
+      let invertInterval = setInterval(() => gif.setAttribute("id", "invert-img"), 200);
+      let normInterval = setInterval(() => gif.setAttribute("id", "invert-img-none"), 400);
+      animateHealthBarDamage(player, prevHP, defender);
+      setTimeout(() => clearInterval(invertInterval), 2000);
+      setTimeout(() => clearInterval(normInterval), 2400);
+      if (defender.currentHP <= 0){
+        setTimeout(() => renderDeathAnimation(defender, player), 3500);
+      }
+    }
+  }
+
+  const renderDeathAnimation = (defender, player) => {
+    if (player === "player1"){
+      updatedOpponentTeam = [];
+      opponentTeam.forEach((pokemon) => {
+        console.log(pokemon);
+        console.log(defender);
+        if (pokemon.id !== defender.id){
+          updatedOpponentTeam.push(pokemon);
+        }
+      });
+
+      opponentTeam = updatedOpponentTeam;
+      removeWaitingAreaPokemon(defender, player);
+      let gif = document.getElementsByClassName("pokemon-gif-p2")[0];
+      gif.setAttribute("id", "invert-img-half");
+      let deathInterval1 = setInterval(() => {
+        gif.setAttribute("id", "invert-img-quarter");
+      }, 100);
+
+      let deathInterval2 = setInterval(() => {
+        gif.setAttribute("id", "invert-img-half");
+      }, 300);
+      setTimeout(() => clearInterval(deathInterval1), 3000);
+      setTimeout(() => clearInterval(deathInterval2), 3000);
+      setTimeout(() => $(".pokemon-gif-p2").remove(), 3000);
+    } else {
+      currentPokemonP1 = null;
+      removeWaitingAreaPokemon(defender, player);
+      let gif = document.getElementsByClassName("pokemon-gif-p1")[0];
+      gif.setAttribute("id", "invert-img-half");
+      let deathInterval1 = setInterval(() => {
+        gif.setAttribute("id", "invert-img-quarter");
+      }, 100);
+
+      let deathInterval2 = setInterval(() => {
+        gif.setAttribute("id", "invert-img-half");
+      }, 300);
+      setTimeout(() => clearInterval(deathInterval1), 3000);
+      setTimeout(() => clearInterval(deathInterval2), 3000);
+      setTimeout(() => $(".pokemon-gif-p1").remove(), 3000);
+    }
+  }
+
+  const removeWaitingAreaPokemon = (defender, player) => {
+    if (player === "player1"){
+      let waitingArea = document.getElementsByClassName("waiting-area-container-p2")[0];
+      let images = waitingArea.children;
+
+      for (let i = 0; i < images.length; i++){
+        let img = images[i];
+        let url = img.src.slice(0, img.src.length - 4);
+        let id = parseInt(url.slice(37));
+        if (id === defender.id){
+          waitingArea.removeChild(img);
+        }
+      }
+    } else {
+      let waitingArea = document.getElementsByClassName("waiting-area-container-p1")[0];
+      let images = waitingArea.children;
+
+      for (let i = 0; i < images.length; i++){
+        let img = images[i];
+        let url = img.src.slice(0, img.src.length - 4);
+        let id = parseInt(url.slice(37));
+        if (id === defender.id){
+          waitingArea.removeChild(img);
+        }
+      }
     }
   }
 
@@ -469,9 +696,11 @@ const fetchAllPokemon = () => {
     let attackMessage = document.createElement("div");
     let background = document.getElementsByClassName("background-modal")[0];
     attackMessage.setAttribute("class", "attack-message");
-    attackMessage.innerHTML = `${currentPokemonP1['name']} uses ${move}!`;
+    attackMessage.innerHTML = `${currentAttackingPokemon.name} uses ${move}!`;
 
     $("html, body").animate({ scrollTop: "0px" });
+    setTimeout(() => $('.options-container').remove(), 1000);
+
     background.appendChild(attackMessage);
     let randomGif = selectRandomGif(currentGifs.data);
 
@@ -484,6 +713,24 @@ const fetchAllPokemon = () => {
     setTimeout(() => background.removeChild(gif), 5000);
     setTimeout(() => fade(attackMessage), 2000);
     setTimeout(() => background.removeChild(attackMessage), 5000);
+    setTimeout(() => switchPlayerTurn(), 8000);
+  }
+
+  const switchPlayerTurn = () => {
+
+    currentTurnPlayer = currentTurnPlayer === "player1" ? "player2" : "player1";
+    if (currentTurnPlayer === "player2"){
+      opponentPlayTurn();
+    } else {
+      playerPlayTurn();
+    }
+  }
+
+  const playerPlayTurn = () => {
+    if (currentPokemonP1){
+      currentAttackingPokemon = {'name': currentPokemonInfoP1.name, 'player': "player1", "pokemon": player1PokemonStats[currentPokemonInfoP1.name]};
+      renderTweetOptions(player1PokemonStats[currentPokemonInfoP1.name]['tweets'])
+    }
   }
 
 
