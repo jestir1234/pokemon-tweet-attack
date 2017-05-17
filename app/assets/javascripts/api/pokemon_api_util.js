@@ -531,6 +531,31 @@ const fetchAllPokemon = () => {
     );
   }
 
+  // const renderEmotion = (emotion) => {
+  //   let img = document.createElement("img");
+  //
+  //   if (currentTurnPlayer === "player1"){
+  //     img.setAttribute("class", "emoji-p1");
+  //   } else {
+  //     img.setAttribute("class", "emoji-p2");
+  //   }
+  //   let background = document.getElementsByClassName("background-modal")[0];
+  //
+  //   if (emotion === "anger"){
+  //     img.src = "http://www.pngmart.com/files/1/Angry-Emoji-PNG-File.png";
+  //   } else if (emotion === "disgust"){
+  //     img.src = "http://www.pngall.com/wp-content/uploads/2016/06/Unamused-Face-Emoji-PNG.png";
+  //   } else if (emotion === "fear"){
+  //     img.src = "http://www.pngall.com/wp-content/uploads/2016/06/Fearful-Emoji-PNG.png";
+  //   } else if (emotion === "joy"){
+  //     img.src = "http://www.pngall.com/wp-content/uploads/2016/06/Love-Hearts-Eyes-Emoji-PNG.png";
+  //   } else if (emotion === "sadness"){
+  //     img.src = "http://www.pngall.com/wp-content/uploads/2016/06/Loudly-Crying-Emoji-PNG.png";
+  //   }
+  //
+  //   background.appendChild(img);
+  // }
+
   const executeAttack = (emotion) => {
 
     let pokeMoves;
@@ -637,11 +662,15 @@ const fetchAllPokemon = () => {
   const renderDeathAnimation = (defender, player) => {
     if (player === "player1"){
       let updatedOpponentTeam = [];
-      opponentTeam.forEach((pokemon) => {
-        if (pokemon.id !== defender.id){
-          updatedOpponentTeam.push(pokemon);
-        }
-      });
+      if (opponentTeam.length){
+        opponentTeam.forEach((pokemon) => {
+          if (pokemon.id !== defender.id){
+            updatedOpponentTeam.push(pokemon);
+          }
+        });
+      } else {
+        setTimeout(() => renderEndGame(player), 8000);
+      }
 
       opponentTeam = updatedOpponentTeam;
       removeWaitingAreaPokemon(defender, player);
@@ -658,6 +687,9 @@ const fetchAllPokemon = () => {
       setTimeout(() => clearInterval(deathInterval2), 2000);
       setTimeout(() => $(".pokemon-gif-p2").remove(), 2000);
     } else {
+      if (!currentTeam.length){
+        setTimeout(() => renderEndGame(player), 8000);
+      }
       currentPokemonP1 = null;
       removeWaitingAreaPokemon(defender, player);
       let gif = document.getElementsByClassName("pokemon-gif-p1")[0];
@@ -673,6 +705,18 @@ const fetchAllPokemon = () => {
       setTimeout(() => clearInterval(deathInterval2), 2000);
       setTimeout(() => $(".pokemon-gif-p1").remove(), 2000);
     }
+  }
+
+  const renderEndGame = (player) => {
+    let endGameScreen = document.createElement("div");
+
+    endGameScreen.setAttribute("class", "end-game-modal");
+
+    let height = $(document).height().toString() + "px";
+    endGameScreen.style.height = height;
+
+    let body = document.getElementsByTagName("BODY")[0];
+    body.appendChild(endGameScreen);
   }
 
   const removeWaitingAreaPokemon = (defender, player) => {

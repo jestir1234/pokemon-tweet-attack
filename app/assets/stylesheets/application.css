@@ -646,3 +646,35 @@
          -o-animation: fade-screen 1s; /* Opera < 11.1 */
             animation: fade-screen 1s;
 }
+
+.emoji-p1{
+  height: 40px;
+  width: 40px;
+  left: -10%;
+  position: absolute;
+  margin-top: 450px;
+  z-index: 35;
+}
+
+.emoji-p2{
+  height: 40px;
+  width: 40px;
+  right: 10%;
+  position: absolute;
+  margin-top: 450px;
+  z-index: 35;
+}
+
+.end-game-modal{
+  background-color: rgba(0,0,222,0.8);
+  position: absolute;
+  overflow: hidden;
+  left: 0;
+  right: 0;
+  z-index: 75;
+  -webkit-animation: fade 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fade 2s; /* Firefox < 16 */
+        -ms-animation: fade 2s; /* Internet Explorer */
+         -o-animation: fade 2s; /* Opera < 12.1 */
+            animation: fade 2s;
+}

@@ -7,7 +7,8 @@ module.exports = {
   entry: "./app/assets/javascripts/api/pokemon_api_util.js",
   output: {
     path: path.resolve(__dirname, 'app', 'assets', 'javascripts'),
-    filename: "bundle.js"
+    filename: "bundle.js",
+    publicPath: '/js/'
   },
   module: {
     loaders: [
