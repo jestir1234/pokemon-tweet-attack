@@ -194,8 +194,12 @@ const fetchAllPokemon = () => {
     pokeball2.src = "http://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
     pokeball.onload = function(){
       let x = 0;
-      while (x < 6){
+      while (x < currentTeam.length){
         ctx.drawImage(pokeball, canvas.width * .01 + (x * 15), 10, 20, 20 * pokeball.height / pokeball.width);
+        x += 1
+      }
+      x = 0;
+      while (x < opponentTeam.length){
         ctx.drawImage(pokeball2, canvas.width * .72 + (x * 15), 10, 20, 20 * pokeball.height / pokeball.width);
         x += 1
       }
@@ -479,7 +483,10 @@ const fetchAllPokemon = () => {
     let randomTweets = selectRandomTweets(tweets);
     let background = document.getElementsByClassName('background-modal')[0];
     let optionsContainer = document.createElement("div");
+    let optionsContainerCover = document.createElement("div");
     optionsContainer.setAttribute("class", "options-container");
+    optionsContainerCover.setAttribute("class", "options-container-cover");
+
     let header = document.createElement("h3");
     header.innerHTML = "SELECT A TWEET ATTACK!";
 
@@ -495,6 +502,9 @@ const fetchAllPokemon = () => {
     let tweetItem = renderTweet(currentRandomTweets[0]);
     optionsContainer.appendChild(tweetItem);
     background.appendChild(optionsContainer);
+    if (currentTurnPlayer === "player2"){
+      background.appendChild(optionsContainerCover);
+    }
   }
 
   const switchOutTweet = () => {
@@ -699,18 +709,19 @@ const fetchAllPokemon = () => {
     let background = document.getElementsByClassName("background-modal")[0];
     attackMessage.setAttribute("class", "attack-message");
     if (emotion === "anger" || emotion === "joy"){
-      attackMessage.innerHTML = `${currentAttackingPokemon.name} uses ${move}!`;
+      attackMessage.innerHTML = `${capitalize(currentAttackingPokemon.name)} uses ${move}!`;
     } else if (emotion === "sadness"){
-      attackMessage.innerHTML = `${currentAttackingPokemon.name} begins to cry!`;
+      attackMessage.innerHTML = `${capitalize(currentAttackingPokemon.name)} begins to cry!`;
     } else if (emotion === "disgust"){
-      attackMessage.innerHTML = `${currentAttackingPokemon.name} is disgusted!`;
+      attackMessage.innerHTML = `${capitalize(currentAttackingPokemon.name)} is disgusted!`;
     } else if (emotion === "none"){
-      attackMessage.innerHTML = `${currentAttackingPokemon.name} is confused...`;
+      attackMessage.innerHTML = `${capitalize(currentAttackingPokemon.name)} is confused...`;
     } else if (emotion === "fear"){
-      attackMessage.innerHTML = `${currentAttackingPokemon.name} is afraid...`;
+      attackMessage.innerHTML = `${capitalize(currentAttackingPokemon.name)} is afraid...`;
     }
 
-    setTimeout(() => $('.options-container').remove(), 1000);
+    $('.options-container').remove()
+    $('.options-container-cover').remove();
 
     background.appendChild(attackMessage);
     let randomGif = selectRandomGif(currentGifs.data);

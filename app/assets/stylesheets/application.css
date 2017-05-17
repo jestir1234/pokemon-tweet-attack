@@ -319,20 +319,49 @@
 }
 
 .options-container{
+  transform: scale(.8);
   overflow: hidden;
   display:flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border: 5px inset #667292;
-  z-index: 9;
+  z-index: 60;
   background: #d9ecd0;
   position: absolute;
-  top: 55%;
+  top: 6%;
   margin: auto;
   left: 0;
   right: 0;
   width: 500px;
+  -webkit-box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
+  -moz-box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
+  box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
+  -webkit-animation: slide-down 1s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: slide-down 1.5s; /* Firefox < 16 */
+        -ms-animation: slide-down 1.5s; /* Internet Explorer */
+         -o-animation: slide-down 1.5s; /* Opera < 11.1 */
+            animation: slide-down 1.5s;
+}
+
+.options-container-cover{
+  transform: scale(.8);
+  overflow: hidden;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 5px inset #667292;
+  z-index: 70;
+  background: black;
+  opacity: .5;
+  position: absolute;
+  top: 6%;
+  margin: auto;
+  left: 0;
+  right: 0;
+  width: 500px;
+  height: 500px;
   -webkit-box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
   -moz-box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
   box-shadow: 10px 14px 24px 1px rgba(0,0,0,0.9);
@@ -363,9 +392,14 @@
   transform: scale(.9);
 }
 
-@keyframes slide-down {
+/*@keyframes slide-down {
   from { top: 25%;}
   to   { top: 50%;}
+}*/
+
+@keyframes slide-down {
+  from { top: -10%;}
+  to   { top: 6%;}
 }
 
 .tweet-container{
@@ -489,6 +523,7 @@
 
 .pokemon-gif{
   border-radius: 5px;
+  border: 5px double #3b3a30;
   position: absolute;
   top: 20%;
   left: 0px;
