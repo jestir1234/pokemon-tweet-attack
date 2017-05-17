@@ -20,8 +20,8 @@ class Api::TwitterController < ApplicationController
     if name.include?("nidoran")
       name = "nidoran"
     end
-    
-    tweets = client.search("#{name} -rt").take(50)
+
+    tweets = client.search("#{name}").take(50)
     tweet_count = tweets.count
     @tweets = {tweet_count: tweet_count, tweets: tweets}
 

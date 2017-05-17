@@ -607,6 +607,7 @@ const fetchAllPokemon = () => {
       animateHealthBarDamage(player, prevHP, defender);
       setTimeout(() => clearInterval(invertInterval), 2000);
       setTimeout(() => clearInterval(normInterval), 2400);
+      debugger
       if (defender.currentHP <= 0){
         setTimeout(() => renderDeathAnimation(defender, player), 3500);
       }
@@ -625,7 +626,7 @@ const fetchAllPokemon = () => {
 
   const renderDeathAnimation = (defender, player) => {
     if (player === "player1"){
-      updatedOpponentTeam = [];
+      let updatedOpponentTeam = [];
       opponentTeam.forEach((pokemon) => {
         if (pokemon.id !== defender.id){
           updatedOpponentTeam.push(pokemon);
@@ -818,7 +819,7 @@ const fetchAllPokemon = () => {
     //TWEET NAME CONTAINER
       //tweet profile pic container
     let tweetPic = document.createElement("img");
-    tweetPic.src = tweet.user.profile_image_url_http;
+    tweetPic.src = tweet.user.profile_image_url
     tweetImageContainer.appendChild(tweetPic);
       //tweet name container
     let tweetName = document.createElement("h2");
