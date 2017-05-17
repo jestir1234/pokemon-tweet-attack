@@ -21,13 +21,13 @@ let currentTurnPlayer = "player1";
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
-  pokeball.src = "http://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
+  pokeball.src = "https://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
 }
 
 const fetchAllPokemon = () => {
     return $.ajax({
       method: "GET",
-      url: `http://pokeapi.co/api/v2/pokemon/?limit=150`,
+      url: `https://pokeapi.co/api/v2/pokemon/?limit=150`,
       success: (result) => {
         pokemon = pokemon.concat(result.results);
       }
@@ -47,14 +47,14 @@ const fetchAllPokemon = () => {
   const fetchPokemon = (id) => {
     return $.ajax({
       method: "GET",
-      url: `http://pokeapi.co/api/v2/pokemon/${id}/`,
+      url: `https://pokeapi.co/api/v2/pokemon/${id}/`,
     }).then((info) => currentPokemonInfoP1 = info);
   }
 
   const fetchPokemonOpponent = (id) => {
     return $.ajax({
       method: "GET",
-      url: `http://pokeapi.co/api/v2/pokemon/${id}/`,
+      url: `https://pokeapi.co/api/v2/pokemon/${id}/`,
     }).then((info) => currentPokemonInfoP2 = info);
   }
 
@@ -129,7 +129,7 @@ const fetchAllPokemon = () => {
   const fetchGif = (pokemon, attack) => {
     return $.ajax({
       method: "GET",
-      url: `http://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=dc6zaTOxFJmzC`,
+      url: `https://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=dc6zaTOxFJmzC`,
       success: (gifs) => {
         currentGifs = gifs;
       }
@@ -193,8 +193,8 @@ const fetchAllPokemon = () => {
     let pokeball2 = document.createElement("img");
     pokeball.setAttribute("class", "player1-pokeballs");
     pokeball2.setAttribute("class", "player2-pokeballs");
-    pokeball.src = "http://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
-    pokeball2.src = "http://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
+    pokeball.src = "https://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
+    pokeball2.src = "https://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
     pokeball.onload = function(){
       let x = 0;
       while (x < 6){
@@ -211,7 +211,7 @@ const fetchAllPokemon = () => {
     let player2 = document.createElement("img");
     player1.setAttribute("class", "player1-sprite");
     player2.setAttribute("class", "player2-sprite");
-    player1.src = "http://fc01.deviantart.net/fs71/f/2011/003/f/e/pokemon_trainer_denny_by_tsunami_dono-d36cgr5.png";
+    player1.src = "https://fc01.deviantart.net/fs71/f/2011/003/f/e/pokemon_trainer_denny_by_tsunami_dono-d36cgr5.png";
     player2.src = "https://s-media-cache-ak0.pinimg.com/originals/d8/5a/5c/d85a5cb0fe99e3fcf312f91026637eb1.png";
     background.appendChild(player1);
     background.appendChild(player2);
@@ -862,7 +862,7 @@ const fetchAllPokemon = () => {
     let retweetContainer = document.createElement("div");
     retweetContainer.setAttribute("class", "retweet-container");
     let retweetIcon = document.createElement("img");
-    retweetIcon.src = "http://simpleicon.com/wp-content/uploads/retweet.png";
+    retweetIcon.src = "https://simpleicon.com/wp-content/uploads/retweet.png";
     let retweet = document.createElement("p");
     retweet.innerHTML = tweet.retweet_count;
     retweetContainer.appendChild(retweetIcon);
@@ -871,7 +871,7 @@ const fetchAllPokemon = () => {
     let favoritesContainer = document.createElement("div");
     favoritesContainer.setAttribute("class", "favorites-container");
     let favIcon = document.createElement("img");
-    favIcon.src = "http://www.clker.com/cliparts/H/Z/c/f/2/H/solid-dark-grey-heart-md.png";
+    favIcon.src = "https://www.clker.com/cliparts/H/Z/c/f/2/H/solid-dark-grey-heart-md.png";
     let favorites = document.createElement("p");
     favorites.innerHTML = tweet.favorite_count;
     favoritesContainer.appendChild(favIcon);
