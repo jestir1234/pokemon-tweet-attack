@@ -11,7 +11,7 @@ class Api::PokemonController < ApplicationController
       name = pokemon_objects[id]["name"]
       url = pokemon_objects[id]['url']
       image_url = "/pokemon_images/#{num + 1}.png"
-      gif_url = "https://img.pokemondb.net/sprites/black-white/anim/normal/#{name}.gif"
+      gif_url = "http://img.pokemondb.net/sprites/black-white/anim/normal/#{name}.gif"
       @pokemon << {'id' => num + 1, 'name' => name, 'url' => url, 'image_url' => image_url, 'gif_url' => gif_url}
     end
 

@@ -21,13 +21,13 @@ let currentTurnPlayer = "player1";
 
 for (let i = 0; i < 6; i++){
   let pokeball = document.createElement("img");
-  pokeball.src = "https://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
+  pokeball.src = "http://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
 }
 
 const fetchAllPokemon = () => {
     return $.ajax({
       method: "GET",
-      url: `https://pokeapi.co/api/v2/pokemon/?limit=150`,
+      url: `http://pokeapi.co/api/v2/pokemon/?limit=150`,
       success: (result) => {
         pokemon = pokemon.concat(result.results);
       }
@@ -47,14 +47,14 @@ const fetchAllPokemon = () => {
   const fetchPokemon = (id) => {
     return $.ajax({
       method: "GET",
-      url: `https://pokeapi.co/api/v2/pokemon/${id}/`,
+      url: `http://pokeapi.co/api/v2/pokemon/${id}/`,
     }).then((info) => currentPokemonInfoP1 = info);
   }
 
   const fetchPokemonOpponent = (id) => {
     return $.ajax({
       method: "GET",
-      url: `https://pokeapi.co/api/v2/pokemon/${id}/`,
+      url: `http://pokeapi.co/api/v2/pokemon/${id}/`,
     }).then((info) => currentPokemonInfoP2 = info);
   }
 
@@ -129,16 +129,13 @@ const fetchAllPokemon = () => {
   const fetchGif = (pokemon, attack) => {
     return $.ajax({
       method: "GET",
-      url: `https://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=dc6zaTOxFJmzC`,
+      url: `http://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=dc6zaTOxFJmzC`,
       success: (gifs) => {
         currentGifs = gifs;
       }
     })
   }
 
-  const stopFunction = (interval) => {
-    clearInterval(interval);
-  }
 
   const increaseWidth = () => {
     let gameScreen = document.getElementById("gamescreen-canvas");
@@ -149,7 +146,7 @@ const fetchAllPokemon = () => {
     renderSelectPokemonText();
     let expandWindowInterval = setInterval(increaseWidth, 10);
 
-    setTimeout(() => stopFunction(expandWindowInterval), 500);
+    setTimeout(() => clearInterval(expandWindowInterval), 500);
     setTimeout(drawPokeballs, 1000);
     setTimeout(renderPlayerSprites, 2000);
     setTimeout(() => $("html, body").animate({ scrollTop: "1000px" }), 4000);
@@ -183,7 +180,7 @@ const fetchAllPokemon = () => {
 
     gameModal.appendChild(gameScreen);
     setTimeout(() => $("html, body").animate({ scrollTop: "0px" }), 500);
-    setTimeout(expandGameScreen, 1000);
+    setTimeout(() => expandGameScreen(), 1000);
   }
 
   const drawPokeballs = () => {
@@ -193,8 +190,8 @@ const fetchAllPokemon = () => {
     let pokeball2 = document.createElement("img");
     pokeball.setAttribute("class", "player1-pokeballs");
     pokeball2.setAttribute("class", "player2-pokeballs");
-    pokeball.src = "https://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
-    pokeball2.src = "https://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
+    pokeball.src = "http://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
+    pokeball2.src = "http://forums.windowscentral.com/attachments/nokia-glance-backgrounds/45742d1381464991t-pokeball-glance.png";
     pokeball.onload = function(){
       let x = 0;
       while (x < 6){
@@ -211,8 +208,8 @@ const fetchAllPokemon = () => {
     let player2 = document.createElement("img");
     player1.setAttribute("class", "player1-sprite");
     player2.setAttribute("class", "player2-sprite");
-    player1.src = "https://fc01.deviantart.net/fs71/f/2011/003/f/e/pokemon_trainer_denny_by_tsunami_dono-d36cgr5.png";
-    player2.src = "https://s-media-cache-ak0.pinimg.com/originals/d8/5a/5c/d85a5cb0fe99e3fcf312f91026637eb1.png";
+    player1.src = "http://fc01.deviantart.net/fs71/f/2011/003/f/e/pokemon_trainer_denny_by_tsunami_dono-d36cgr5.png";
+    player2.src = "http://s-media-cache-ak0.pinimg.com/originals/d8/5a/5c/d85a5cb0fe99e3fcf312f91026637eb1.png";
     background.appendChild(player1);
     background.appendChild(player2);
     renderPlayerPokemon();
@@ -490,7 +487,7 @@ const fetchAllPokemon = () => {
 
     let nextBtn = document.createElement("img");
     nextBtn.setAttribute("class", "next-btn");
-    nextBtn.src = "https://vignette1.wikia.nocookie.net/pokemongo/images/1/1b/Button_Next.png/revision/latest?cb=20160908143000";
+    nextBtn.src = "http://vignette1.wikia.nocookie.net/pokemongo/images/1/1b/Button_Next.png/revision/latest?cb=20160908143000";
     nextBtn.addEventListener("click", switchOutTweet);
     optionsContainer.appendChild(nextBtn);
 
@@ -719,7 +716,7 @@ const fetchAllPokemon = () => {
 
     let gif = document.createElement("img");
     gif.setAttribute("class", "pokemon-gif");
-    let url = "https://media.giphy.com/media/" + randomGif.embed_url.slice(23) + "/giphy.gif";
+    let url = "http://media.giphy.com/media/" + randomGif.embed_url.slice(23) + "/giphy.gif";
 
     gif.src = url;
     background.appendChild(gif);
@@ -821,7 +818,7 @@ const fetchAllPokemon = () => {
     //TWEET NAME CONTAINER
       //tweet profile pic container
     let tweetPic = document.createElement("img");
-    tweetPic.src = tweet.user.profile_image_url_https;
+    tweetPic.src = tweet.user.profile_image_url_http;
     tweetImageContainer.appendChild(tweetPic);
       //tweet name container
     let tweetName = document.createElement("h2");
@@ -862,7 +859,7 @@ const fetchAllPokemon = () => {
     let retweetContainer = document.createElement("div");
     retweetContainer.setAttribute("class", "retweet-container");
     let retweetIcon = document.createElement("img");
-    retweetIcon.src = "https://simpleicon.com/wp-content/uploads/retweet.png";
+    retweetIcon.src = "http://simpleicon.com/wp-content/uploads/retweet.png";
     let retweet = document.createElement("p");
     retweet.innerHTML = tweet.retweet_count;
     retweetContainer.appendChild(retweetIcon);
@@ -871,7 +868,7 @@ const fetchAllPokemon = () => {
     let favoritesContainer = document.createElement("div");
     favoritesContainer.setAttribute("class", "favorites-container");
     let favIcon = document.createElement("img");
-    favIcon.src = "https://www.clker.com/cliparts/H/Z/c/f/2/H/solid-dark-grey-heart-md.png";
+    favIcon.src = "http://www.clker.com/cliparts/H/Z/c/f/2/H/solid-dark-grey-heart-md.png";
     let favorites = document.createElement("p");
     favorites.innerHTML = tweet.favorite_count;
     favoritesContainer.appendChild(favIcon);
@@ -913,7 +910,7 @@ const fetchAllPokemon = () => {
 
     let background = document.getElementsByClassName('background-modal')[0];
     let pokeball = document.createElement('img');
-    pokeball.src = "https://media.giphy.com/media/DJM88aCmEeaNG/giphy.gif";
+    pokeball.src = "http://media.giphy.com/media/DJM88aCmEeaNG/giphy.gif";
     pokeball.setAttribute("class", pokeballGifClass);
 
     if (player === "player1"){
@@ -925,7 +922,7 @@ const fetchAllPokemon = () => {
 
     let smoke = document.createElement('img');
     smoke.setAttribute("class", smokeGifClass);
-    smoke.src = "https://media.giphy.com/media/drj4KPFH32Mw/giphy.gif";
+    smoke.src = "http://media.giphy.com/media/drj4KPFH32Mw/giphy.gif";
 
     background.appendChild(pokeball);
 

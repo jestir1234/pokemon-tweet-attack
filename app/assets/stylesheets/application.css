@@ -21,6 +21,7 @@
    border: 5px double black;
    font-family: 'Geo', sans-serif;
    letter-spacing: 2px;
+   z-index: -1;
  }
 
  h1{
@@ -118,7 +119,6 @@
 
 .background-modal{
   background-color: rgba(0,0,255,0.6);
-  z-index: 2;
   position: absolute;
   overflow: hidden;
   left: 0;
