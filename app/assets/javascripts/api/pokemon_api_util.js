@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function(e){
+document.addEventListener("DOMContentLoaded", () => {
 console.log("dom is fully loaded, pokemon util running");
 
 let pokemon = [];
