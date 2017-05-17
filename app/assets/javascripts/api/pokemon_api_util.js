@@ -250,7 +250,6 @@ const fetchAllPokemon = () => {
     } else {
       opponentSelectRandomPokemon();
       setTimeout(() => opponentPlayTurn(), 6000);
-
     }
   }
 
@@ -309,8 +308,6 @@ const fetchAllPokemon = () => {
     ctx.beginPath();
 
     if (p2HealthBarAttr){
-      console.log("p2HealthBarAttr is....")
-      console.log(p2HealthBarAttr)
       if (p2HealthBarAttr.width < 50 && p2HealthBarAttr.width > 25){
         ctx.strokeStyle = 'orange';
       } else if (p2HealthBarAttr.width < 25){
@@ -363,6 +360,7 @@ const fetchAllPokemon = () => {
   let p2HealthBarAttr;
 
   const animateHealthBar = (player) => {
+
     if (player === "player1"){
       let hpPercentage = currentPokemonP1.currentHP / currentPokemonP1.totalHP;
       let currentHPBarWidth = 80 * hpPercentage;
@@ -424,16 +422,14 @@ const fetchAllPokemon = () => {
       let newHpPercentage = defender.currentHP / defender.totalHP;
       let prevHpPercentage = prevHP / defender.totalHP;
       let currentHPBarWidth = Math.floor(80 * newHpPercentage);
-      console.log(currentHPBarWidth);
-      console.log(prevHpPercentage);
+
       if (prevHpPercentage >= 1){
         p1HealthBarAttr = {x: 10, y: p1HealthBarAttr.y, width: p1HealthBarAttr.width, height: p1HealthBarAttr.height};
       }
 
       let animationInterval = setInterval(() => {
         if (p1HealthBarAttr.width >= currentHPBarWidth && p1HealthBarAttr.width >= 1){
-          console.log(currentHPBarWidth);
-          console.log(p2HealthBarAttr);
+
           p1HealthBarAttr = {x: p1HealthBarAttr.x, y: p1HealthBarAttr.y, width: p1HealthBarAttr.width - 1, height: p1HealthBarAttr.height};
           redrawCanvas();
         }
@@ -543,7 +539,6 @@ const fetchAllPokemon = () => {
       fetchPokemonMove(pokeMoves[idx].move.url)
       .then(() => {
         calcAttack();
-        console.log("got move");
       }
     );
     } else if (emotion === "disgust"){
@@ -556,7 +551,6 @@ const fetchAllPokemon = () => {
       fetchPokemonMove(pokeMoves[idx].move.url)
       .then(() => {
         calcAttack();
-        console.log("got move");
       }
     );
     } else if (emotion === "sadness"){
@@ -574,7 +568,6 @@ const fetchAllPokemon = () => {
   const calcAttack = () => {
     let attack = currentAttackingPokemon.pokemon.attack;
     let chance = Math.floor(Math.random() * 100);
-    console.log(currentMove);
 
     let power = currentMove.power;
     let hit = currentMove.accuracy >= chance ? true : false;
@@ -585,6 +578,7 @@ const fetchAllPokemon = () => {
       player2PokemonStats[currentPokemonInfoP2.name].currentHP -= (totalDmg - player2PokemonStats[currentPokemonInfoP2.name].defense)
       if (player2PokemonStats[currentPokemonInfoP2.name].currentHP <= 0){
         currentPokemonP2 = null;
+        p2HealthBar = 1;
       }
       setTimeout(() => renderDamage(currentAttackingPokemon.player, prevHP, player2PokemonStats[currentPokemonInfoP2.name]), 3000);
     } else {
@@ -592,6 +586,7 @@ const fetchAllPokemon = () => {
       player1PokemonStats[currentPokemonInfoP1.name].currentHP -= (totalDmg - player1PokemonStats[currentPokemonInfoP1.name].defense)
       if (player1PokemonStats[currentPokemonInfoP1.name].currentHP <= 0){
         currentPokemonP1 = null;
+        p1HealthBar = 1;
       }
       setTimeout(() => renderDamage(currentAttackingPokemon.player, prevHP, player1PokemonStats[currentPokemonInfoP1.name]), 3000);
     }
@@ -625,8 +620,6 @@ const fetchAllPokemon = () => {
     if (player === "player1"){
       updatedOpponentTeam = [];
       opponentTeam.forEach((pokemon) => {
-        console.log(pokemon);
-        console.log(defender);
         if (pokemon.id !== defender.id){
           updatedOpponentTeam.push(pokemon);
         }
@@ -643,9 +636,9 @@ const fetchAllPokemon = () => {
       let deathInterval2 = setInterval(() => {
         gif.setAttribute("id", "invert-img-half");
       }, 300);
-      setTimeout(() => clearInterval(deathInterval1), 3000);
-      setTimeout(() => clearInterval(deathInterval2), 3000);
-      setTimeout(() => $(".pokemon-gif-p2").remove(), 3000);
+      setTimeout(() => clearInterval(deathInterval1), 2000);
+      setTimeout(() => clearInterval(deathInterval2), 2000);
+      setTimeout(() => $(".pokemon-gif-p2").remove(), 2000);
     } else {
       currentPokemonP1 = null;
       removeWaitingAreaPokemon(defender, player);
@@ -658,9 +651,9 @@ const fetchAllPokemon = () => {
       let deathInterval2 = setInterval(() => {
         gif.setAttribute("id", "invert-img-half");
       }, 300);
-      setTimeout(() => clearInterval(deathInterval1), 3000);
-      setTimeout(() => clearInterval(deathInterval2), 3000);
-      setTimeout(() => $(".pokemon-gif-p1").remove(), 3000);
+      setTimeout(() => clearInterval(deathInterval1), 2000);
+      setTimeout(() => clearInterval(deathInterval2), 2000);
+      setTimeout(() => $(".pokemon-gif-p1").remove(), 2000);
     }
   }
 
@@ -751,7 +744,8 @@ const fetchAllPokemon = () => {
 
 
   const calcScore = (score) => {
-    let tweetScores = score.scores;
+    console.log(score);
+    let tweetScores = score.scores !== "Unavailable" ? score.scores : {anger: {score: 0}, disgust: {score: 0}, fear: {score: 0}, joy: {score: 0}, sadness: {score: 0} };
 
     let highest = 0;
 
