@@ -17,10 +17,19 @@ class Api::TwitterController < ApplicationController
     pokemon = params[:pokemon]
 
     name = pokemon['name']
+    if name.include?("nidoran")
+      name = "nidoran"
+    end
     tweets = client.search("#{name} -rt").take(50)
     tweet_count = tweets.count
     @tweets = {tweet_count: tweet_count, tweets: tweets}
 
+
+    # trending_hashtags = client.trends.take(50)
+    # random_hashtag = trending_hashtags[rand(0..trending_hashtags.length - 1)]
+    # trending_tweets = client.search("#{random_hashtag.name} -rt")
+    # tweet_count = trending_tweets.count
+    # @tweets = {tweet_count: tweet_count, tweets: trending_tweets}
 
     render 'api/twitter/twitter'
   end

@@ -245,6 +245,10 @@ const fetchAllPokemon = () => {
       currentAttackingPokemon = {'name': currentPokemonInfoP2.name, 'player': "player2", "pokemon": player2PokemonStats[currentPokemonInfoP2.name]};
       renderTweetOptions(player2PokemonStats[currentPokemonP2.name]['tweets'])
       setTimeout(() => {
+        let nextChance = (Math.random() * 100);
+        if (nextChance > 50){
+          $('.next-btn').trigger("click")
+        }
         $('.tweet-container').trigger('click');
       }, 4000)
     } else {
@@ -404,15 +408,11 @@ const fetchAllPokemon = () => {
       let newHpPercentage = defender.currentHP / defender.totalHP;
       let prevHpPercentage = prevHP / defender.totalHP;
       let currentHPBarWidth = Math.floor(80 * newHpPercentage);
-      // console.log(currentHPBarWidth);
-      // console.log(prevHpPercentage);
       if (prevHpPercentage >= 1){
         p2HealthBarAttr = {x: 255, y: p2HealthBarAttr.y, width: p2HealthBarAttr.width, height: p2HealthBarAttr.height};
       }
       let animationInterval = setInterval(() => {
         if (p2HealthBarAttr.width >= currentHPBarWidth && p2HealthBarAttr.width >= 1){
-          // console.log(currentHPBarWidth);
-          // console.log(p2HealthBarAttr);
           p2HealthBarAttr = {x: p2HealthBarAttr.x + 1, y: p2HealthBarAttr.y, width: p2HealthBarAttr.width - 1, height: p2HealthBarAttr.height};
           redrawCanvas();
         }
@@ -446,6 +446,7 @@ const fetchAllPokemon = () => {
   const playPokemon = (pokemon) => {
 
     if (currentPokemonP1 === null && currentTurnPlayer === "player1"){
+      currentPokemonP1 = "fetching..."
       fetchPokemon(pokemon['id']).then(() => {
       let health = currentPokemonInfoP1.stats[5].base_stat + currentPokemonInfoP1.base_experience;
       let attack = currentPokemonInfoP1.stats[4].base_stat
@@ -514,18 +515,21 @@ const fetchAllPokemon = () => {
   }
 
   const getTweetScore = (tweet) => {
+    $("html, body").animate({ scrollTop: "0px" });
+    renderSpeechBubble(tweet.text, currentTurnPlayer)
     fetchTweetTones(tweet).then((scores) =>
     {
       currentTweetScores = scores
       let emotion = calcScore(scores);
-      executeAttack(emotion);
+      setTimeout(() => executeAttack(emotion), 3000);
      }
     );
   }
 
   const executeAttack = (emotion) => {
 
-    let pokeMoves
+    let pokeMoves;
+    let pokemonToFetch;
     if (currentTurnPlayer === "player1"){
       pokeMoves = currentPokemonInfoP1.moves;
     } else {
@@ -534,6 +538,7 @@ const fetchAllPokemon = () => {
     let move;
 
     if (emotion === "anger"){
+      pokemonToFetch = currentAttackingPokemon['name'];
       let idx = Math.floor(Math.random() * 30);
       move = pokeMoves[idx].move.name;
       fetchPokemonMove(pokeMoves[idx].move.url)
@@ -542,10 +547,13 @@ const fetchAllPokemon = () => {
       }
     );
     } else if (emotion === "disgust"){
-      move = "weird";
+      pokemonToFetch = "nicolas+cage"
+      move = "nicolas+cage";
     } else if (emotion === "fear"){
+      pokemonToFetch = "scared";
       move = "scared";
     } else if (emotion === "joy"){
+      pokemonToFetch = currentAttackingPokemon['name'];
       let idx = Math.floor(Math.random() * 30);
       move = pokeMoves[idx].move.name;
       fetchPokemonMove(pokeMoves[idx].move.url)
@@ -554,10 +562,14 @@ const fetchAllPokemon = () => {
       }
     );
     } else if (emotion === "sadness"){
-      move = "cry";
+      pokemonToFetch = "crying";
+      move = "crying";
+    } else if (emotion === "none"){
+      pokemonToFetch = "confused";
+      move = "confused"
     }
 
-    fetchGif(currentAttackingPokemon['name'], move).then(() => renderAttack(move))
+    fetchGif(pokemonToFetch, move).then(() => renderAttack(move, emotion))
   }
 
   const selectRandomGif = (gifs) => {
@@ -686,13 +698,22 @@ const fetchAllPokemon = () => {
   }
 
 
-  const renderAttack = (move) => {
+  const renderAttack = (move, emotion) => {
     let attackMessage = document.createElement("div");
     let background = document.getElementsByClassName("background-modal")[0];
     attackMessage.setAttribute("class", "attack-message");
-    attackMessage.innerHTML = `${currentAttackingPokemon.name} uses ${move}!`;
+    if (emotion === "anger" || emotion === "joy"){
+      attackMessage.innerHTML = `${currentAttackingPokemon.name} uses ${move}!`;
+    } else if (emotion === "sadness"){
+      attackMessage.innerHTML = `${currentAttackingPokemon.name} begins to cry!`;
+    } else if (emotion === "disgust"){
+      attackMessage.innerHTML = `${currentAttackingPokemon.name} is disgusted!`;
+    } else if (emotion === "none"){
+      attackMessage.innerHTML = `${currentAttackingPokemon.name} is confused...`;
+    } else if (emotion === "fear"){
+      attackMessage.innerHTML = `${currentAttackingPokemon.name} is afraid...`;
+    }
 
-    $("html, body").animate({ scrollTop: "0px" });
     setTimeout(() => $('.options-container').remove(), 1000);
 
     background.appendChild(attackMessage);
@@ -748,37 +769,43 @@ const fetchAllPokemon = () => {
     let tweetScores = score.scores !== "Unavailable" ? score.scores : {anger: {score: 0}, disgust: {score: 0}, fear: {score: 0}, joy: {score: 0}, sadness: {score: 0} };
 
     let highest = 0;
+    let emotion = 'none';
 
     let anger = tweetScores.anger ? tweetScores.anger.score : 0;
 
     if (anger > highest) {
-      highest = "anger";
+      emotion = "anger";
+      highest = anger;
     }
 
     let disgust = tweetScores.disgust.score;
 
     if (disgust > highest){
-      highest = "disgust"
+      emotion = "disgust";
+      highest = disgust;
     }
 
     let fear = tweetScores.fear.score;
 
     if (fear > highest) {
-      highest = "fear";
+      emotion = "fear";
+      highest = fear;
     }
 
     let joy = tweetScores.joy.score;
 
     if (joy > highest) {
-      highest = "joy";
+      emotion = "joy"
+      highest = joy;
     }
 
     let sadness = tweetScores.sadness.score;
 
     if (sadness > highest){
-      highest = "sadness";
+      emotion = "sadness";
+      highest = sadness;
     }
-    return highest
+    return emotion;
   }
 
   const renderTweet = (tweet) => {
@@ -865,7 +892,8 @@ const fetchAllPokemon = () => {
   }
 
   const renderPokemonOntoField = (pokemon, player) => {
-    setTimeout(() => $("html, body").animate({ scrollTop: "0" }), 500);
+    setTimeout(() => $("html, body").animate({ scrollTop: "0" }), 10);
+    renderSpeechBubble(`${capitalize(pokemon.name)}, I choose you!`, player);
     generateHealthBar(player);
 
     let pokeballGifClass;
@@ -911,6 +939,34 @@ const fetchAllPokemon = () => {
     setTimeout(() => background.appendChild(smoke), 2500);
     setTimeout(() => { smoke.setAttribute("class", "hide")}, 3000);
     setTimeout(() => background.appendChild(pokemonGif), 3000);
+  }
+
+  const renderSpeechBubble = (text, player) => {
+
+    let bubble = document.createElement("div");
+    let background = document.getElementsByClassName('background-modal')[0];
+    if (player === "player1"){
+      $(".speech-bubble-p1").remove();
+      bubble.setAttribute("class", "speech-bubble-p1");
+    } else {
+      $(".speech-bubble-p2").remove();
+      bubble.setAttribute("class", "speech-bubble-p2");
+    }
+    setTimeout(() => background.removeChild(bubble), 3500);
+    bubble.innerHTML = trimText(text);
+    background.appendChild(bubble);
+  }
+
+
+  function capitalize(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  const trimText = (text) => {
+    if (text.length > 60){
+      text = text.slice(0, 50);
+    }
+    return text;
   }
 
 });
