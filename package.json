@@ -1,20 +1,31 @@
 {
-  "name": "attack-on-beer",
+  "name": "attackonbeer",
   "version": "1.0.0",
-  "description": "Visualization of Free Beer Events",
+  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
   "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
   "dependencies": {
-    "d3": "^4.7.4",
-    "papaparse": "^4.1.4",
-    "webpack-dev-server": "^2.4.1"
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^2.5.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "webpack-dev-server --progress --colors",
-    "postinstall": "./node_modules/.bin/webpack"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jestir1234/pokemon-tweet-attack.git"
   },
   "keywords": [],
-  "author": "Matthew Nguyen",
-  "license": "ISC"
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jestir1234/pokemon-tweet-attack/issues"
+  },
+  "homepage": "https://github.com/jestir1234/pokemon-tweet-attack#readme"
 }
