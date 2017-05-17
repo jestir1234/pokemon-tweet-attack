@@ -230,8 +230,7 @@ const fetchAllPokemon = () => {
       let speed = currentPokemonInfoP2.stats[0].base_stat
       player2PokemonStats[currentPokemonInfoP2.name] = {totalHP: health, currentHP: health, attack: attack, defense: defense, speed: speed, name: currentPokemonInfoP2.name, id: currentPokemonInfoP2.id};
       currentPokemonP2 = player2PokemonStats[currentPokemonInfoP2.name];
-      console.log("player 2 pokemon is...")
-      console.log(currentPokemonInfoP2)
+
       fetchPokemonTweets(opponentTeam[idx]).then((tweets) => {
         player2PokemonStats[currentPokemonInfoP2.name]['tweets'] = tweets.tweets;
         setTimeout(() => renderPokemonOntoField(opponentTeam[idx], "player2"), 3000);
@@ -456,8 +455,7 @@ const fetchAllPokemon = () => {
       currentPokemonP1 = player1PokemonStats[currentPokemonInfoP1.name];
       currentAttackingPokemon = {'name': currentPokemonInfoP1.name, 'player': "player1", "pokemon": player1PokemonStats[currentPokemonInfoP1.name]};
       renderPokemonOntoField(pokemon, "player1");
-      console.log("player 1 pokemon is...")
-      console.log(currentPokemonInfoP1)
+
       fetchPokemonTweets(pokemon).then((tweets) =>
       {
         player1PokemonStats[currentPokemonInfoP1.name]['tweets'] = tweets.tweets;
@@ -765,7 +763,7 @@ const fetchAllPokemon = () => {
 
 
   const calcScore = (score) => {
-    console.log(score);
+
     let tweetScores = score.scores !== "Unavailable" ? score.scores : {anger: {score: 0}, disgust: {score: 0}, fear: {score: 0}, joy: {score: 0}, sadness: {score: 0} };
 
     let highest = 0;

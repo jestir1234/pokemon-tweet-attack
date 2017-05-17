@@ -4,7 +4,7 @@ const prod = process.argv.indexOf('-p') !== -1;
 
 module.exports = {
   context: __dirname,
-  entry: "./app/views/static_pages/index.html.erb",
+  entry: "./app/assets/javascripts/api/pokemon_api_util.js",
   output: {
     path: path.resolve(__dirname, 'app', 'assets', 'javascripts'),
     filename: "bundle.js"
