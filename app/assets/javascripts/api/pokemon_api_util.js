@@ -160,13 +160,19 @@ const fetchAllPokemon = () => {
     }
 
     let backgroundModal = document.createElement("div");
+    let audio = document.createElement("AUDIO");
+    audio.src = "https://s3.amazonaws.com/beathub-dev/Poke%CC%81mon+Red++Blue+-+Final+Battle+Theme++vs+Rival+%5BHQ%5D.mp3";
+    audio.autoplay;
+    audio.loop = true;
     backgroundModal.setAttribute("class", "background-modal");
+    backgroundModal.appendChild(audio);
 
     let height = $(document).height().toString() + "px";
     backgroundModal.style.height = height;
 
     let body = document.getElementsByTagName("BODY")[0];
     body.appendChild(backgroundModal);
+    audio.play();
     renderBattleScreen();
   }
 
@@ -799,7 +805,7 @@ const fetchAllPokemon = () => {
       attackMessage.innerHTML = `${capitalize(currentAttackingPokemon.name)} uses ${move}!`;
     } else if (emotion === "sadness" && move === "crying"){
       attackMessage.innerHTML = `${capitalize(currentAttackingPokemon.name)} begins to cry!`;
-    } else if (emotion === "disgust"){
+    } else if (emotion === "disgust" && move === "nicolas+cage"){
       attackMessage.innerHTML = `${capitalize(currentAttackingPokemon.name)} is disgusted!`;
     } else if (emotion === "none" && move === "confused"){
       attackMessage.innerHTML = `${capitalize(currentAttackingPokemon.name)} is confused...`;
