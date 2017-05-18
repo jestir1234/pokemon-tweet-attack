@@ -741,7 +741,7 @@ const fetchAllPokemon = () => {
     let gameOver = document.createElement("div");
     let gameWinner = document.createElement("div");
     let startOver = document.createElement("div");
-    nurseJoy.src = "http://vignette3.wikia.nocookie.net/leonhartimvu/images/8/83/Nurse_Joy_Anime.png/revision/latest?cb=20131023195926";
+    nurseJoy.src = "http://cdn.bulbagarden.net/upload/thumb/8/8e/Nurse_Joy_OS.png/125px-Nurse_Joy_OS.png";
     nurseJoy.setAttribute("class", "nurse-joy");
     endGameScreen.setAttribute("class", "end-game-modal");
     gameOver.setAttribute("class", "game-over");
