@@ -456,8 +456,67 @@ const fetchAllPokemon = () => {
   const playPokemon = (pokemon) => {
 
     if (currentPokemonP1 === null && currentTurnPlayer === "player1"){
+      if (player1PokemonStats[pokemon.name]){
+        currentPokemonInfoP1 = player1PokemonStats[pokemon.name]
+        currentPokemonP1 = player1PokemonStats[pokemon.name];
+        currentAttackingPokemon = {'name': currentPokemonInfoP1.name, 'player': "player1", "pokemon": player1PokemonStats[currentPokemonInfoP1.name]};
+        renderPokemonOntoField(pokemon, "player1");
+        renderTweetOptions(player1PokemonStats[pokemon.name].tweets);
+      } else {
+        currentPokemonP1 = "fetching..."
+        let fetchingDiv = document.createElement("div");
+        let img = document.createElement("img");
+        img.src = "http://codepen.io/boltaway/pen/BjyFb/image/large.png";
+        fetchingDiv.appendChild(img);
+        let background = document.getElementsByClassName('background-modal')[0];
+        fetchingDiv.setAttribute("class", "loader");
+        fetchingDiv.setAttribute("id", "fetching-pokemon-loader");
+        console.log("appending fetching div....")
+        background.appendChild(fetchingDiv);
+
+        fetchPokemon(pokemon['id']).then(() => {
+        fetchingDiv.remove();
+        let health = currentPokemonInfoP1.stats[5].base_stat + currentPokemonInfoP1.base_experience;
+        let attack = currentPokemonInfoP1.stats[4].base_stat
+        let defense = currentPokemonInfoP1.stats[3].base_stat
+        let speed = currentPokemonInfoP1.stats[0].base_stat
+        player1PokemonStats[currentPokemonInfoP1.name] = {totalHP: health, currentHP: health, attack: attack, defense: defense, speed: speed, name: currentPokemonInfoP1.name, id: currentPokemonInfoP1.id, moves: currentPokemonInfoP1.moves};
+        currentPokemonP1 = player1PokemonStats[currentPokemonInfoP1.name];
+        currentAttackingPokemon = {'name': currentPokemonInfoP1.name, 'player': "player1", "pokemon": player1PokemonStats[currentPokemonInfoP1.name]};
+        renderPokemonOntoField(pokemon, "player1");
+
+        fetchPokemonTweets(pokemon).then((tweets) =>
+        {
+          player1PokemonStats[currentPokemonInfoP1.name]['tweets'] = tweets.tweets;
+          renderTweetOptions(tweets.tweets);
+        });
+        }
+      );
+      }
+
+  } else if (currentTurnPlayer === "player1"){
+    console.log("pokemon already in play");
+    $(".pokemon-gif-p1").remove();
+    $(".options-container").remove();
+    if (player1PokemonStats[pokemon.name]){
+      currentPokemonInfoP1 = player1PokemonStats[pokemon.name]
+      currentPokemonP1 = player1PokemonStats[pokemon.name];
+      currentAttackingPokemon = {'name': currentPokemonInfoP1.name, 'player': "player1", "pokemon": player1PokemonStats[currentPokemonInfoP1.name]};
+      renderPokemonOntoField(pokemon, "player1");
+      fetchPokemonTweets(pokemon);
+      switchPlayerTurn();
+    } else {
       currentPokemonP1 = "fetching..."
+      let fetchingDiv = document.createElement("div");
+      let img = document.createElement("img");
+      img.src = "http://codepen.io/boltaway/pen/BjyFb/image/large.png";
+      fetchingDiv.appendChild(img);
+      let background = document.getElementsByClassName('background-modal')[0];
+      fetchingDiv.setAttribute("class", "loader");
+      fetchingDiv.setAttribute("id", "fetching-pokemon-loader");
+      background.appendChild(fetchingDiv);
       fetchPokemon(pokemon['id']).then(() => {
+      fetchingDiv.remove();
       let health = currentPokemonInfoP1.stats[5].base_stat + currentPokemonInfoP1.base_experience;
       let attack = currentPokemonInfoP1.stats[4].base_stat
       let defense = currentPokemonInfoP1.stats[3].base_stat
@@ -467,14 +526,14 @@ const fetchAllPokemon = () => {
       currentAttackingPokemon = {'name': currentPokemonInfoP1.name, 'player': "player1", "pokemon": player1PokemonStats[currentPokemonInfoP1.name]};
       renderPokemonOntoField(pokemon, "player1");
 
-      fetchPokemonTweets(pokemon).then((tweets) =>
-      {
+      fetchPokemonTweets(pokemon).then((tweets) => {
         player1PokemonStats[currentPokemonInfoP1.name]['tweets'] = tweets.tweets;
-        renderTweetOptions(tweets.tweets);
       });
-      }
-    );
+      switchPlayerTurn();
+    });
     }
+
+  }
   }
 
   const selectRandomTweets = (tweets) => {
@@ -680,7 +739,7 @@ const fetchAllPokemon = () => {
       setTimeout(() => clearInterval(invertInterval), 1000);
       setTimeout(() => clearInterval(normInterval), 1400);
       if (defender.currentHP <= 0){
-        setTimeout(() => renderDeathAnimation(defender, player), 2500);
+        setTimeout(() => renderDeathAnimation(defender, player), 2000);
       }
     } else {
       let gif = document.getElementsByClassName("pokemon-gif-p1")[0];
@@ -690,7 +749,7 @@ const fetchAllPokemon = () => {
       setTimeout(() => clearInterval(invertInterval), 1000);
       setTimeout(() => clearInterval(normInterval), 1400);
       if (defender.currentHP <= 0){
-        setTimeout(() => renderDeathAnimation(defender, player), 2500);
+        setTimeout(() => renderDeathAnimation(defender, player), 2000);
       }
     }
   }
