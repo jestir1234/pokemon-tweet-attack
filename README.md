@@ -41,4 +41,7 @@ Your opponent will also attack. If your current pokemon feints, choose from your
 
  - The combination of a pokemon attack selected based based on the emotional score and the pokemon name creates a query used in an AJAX call to the [Giphy API](https://api.giphy.com/) returning a collection of gifs related to the attack move and pokemon name. A random gif from the collection is chosen and subsequently rendered.
 
+
+## Disclaimer
+
 All rights to Pokemon intellectual property are owned and licensed by Nintendo, Creatures, and Game Freak. Pokemon images, gifs, and avatars are trademarks of Nintendo. Pokemon Tweet Attack does not generate any revenue its purpose is simply an attempt to use different APIs to create a unique user experience.
