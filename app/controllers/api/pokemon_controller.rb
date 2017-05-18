@@ -5,6 +5,7 @@ class Api::PokemonController < ApplicationController
   def create
 
     pokemon_objects = params[:pokemon]
+
     @pokemon = []
     (0...150).each do |num|
       id = num.to_s
