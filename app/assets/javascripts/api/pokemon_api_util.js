@@ -642,7 +642,6 @@ const fetchAllPokemon = () => {
       animateHealthBarDamage(player, prevHP, defender);
       setTimeout(() => clearInterval(invertInterval), 2000);
       setTimeout(() => clearInterval(normInterval), 2400);
-      debugger
       if (defender.currentHP <= 0){
         setTimeout(() => renderDeathAnimation(defender, player), 3500);
       }
@@ -662,7 +661,7 @@ const fetchAllPokemon = () => {
   const renderDeathAnimation = (defender, player) => {
     if (player === "player1"){
       let updatedOpponentTeam = [];
-      if (opponentTeam.length){
+      if (opponentTeam.length > 0){
         opponentTeam.forEach((pokemon) => {
           if (pokemon.id !== defender.id){
             updatedOpponentTeam.push(pokemon);
@@ -687,7 +686,7 @@ const fetchAllPokemon = () => {
       setTimeout(() => clearInterval(deathInterval2), 2000);
       setTimeout(() => $(".pokemon-gif-p2").remove(), 2000);
     } else {
-      if (!currentTeam.length){
+      if (currentTeam.length < 1){
         setTimeout(() => renderEndGame(player), 8000);
       }
       currentPokemonP1 = null;
