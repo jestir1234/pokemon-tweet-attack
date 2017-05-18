@@ -1,6 +1,6 @@
-[Pokemon Tweet Attack](./screenshots/title.png/)
+![Pokemon Tweet Attack](./screenshots/title.png/)
 
-[Pokemon Tweet Attack](http://pokemon-tweet-attack.herokuapp.com/) is a browser game made with Ruby on Rails, JavaScript, jQuery, CSS3, HTML5, and various APIs.
+[Pokemon Tweet Attack](http://pokemon-tweet-attack.herokuapp.com/) is a browser game made with Ruby on Rails, JavaScript, jQuery, CSS3/HTML5, and various APIs.
 
 ## API Technologies
 
