@@ -23,7 +23,14 @@
 ## HOW TO PLAY
 
 ### Select Pokemon Team!
-First select your pokemon team! Power and stats matter as each pokemon contains unique defense, attack, and health. Be careful, however, as having a strong pokemon might not necessarily mean you will be able to use the best attacks. Afterwards, select the first pokemon you wish to battle with.
+First select your pokemon team! Power and stats matter as each pokemon contains unique defense, attack, and health. Be careful, however, as having a strong pokemon might not necessarily mean you will be able to use the best attacks.
 ![HOW TO PLAY](./screenshots/homescreen.gif/)
 
+Afterwards, select the first pokemon you wish to battle with.
 ![CHOOSE YOUR POKEMON](./screenshots/choose_pokemon.gif/)
+
+### Attacking with Tweets!
+After playing your pokemon, you'll be given four random tweets relating to that pokemon. You should try to select a tweet that will make your pokemon happy or angry, otherwise strange things may happen...
+![BATTLE](./screenshots/battle.gif/)
+
+Your opponent will also attack. If your current pokemon feints, choose from your remaining team below the avatar. Defeat all of your opponent's pokemon to win the battle!
