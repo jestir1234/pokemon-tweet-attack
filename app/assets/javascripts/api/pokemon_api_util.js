@@ -130,7 +130,7 @@ const fetchAllPokemon = () => {
   const fetchGif = (pokemon, attack) => {
     return $.ajax({
       method: "GET",
-      url: `http://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=dc6zaTOxFJmzC`,
+      url: `http://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=l46Cfg5hHWYSYDW5q`,
       success: (gifs) => {
         currentGifs = gifs;
       }
