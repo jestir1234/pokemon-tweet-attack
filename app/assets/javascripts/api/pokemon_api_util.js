@@ -128,10 +128,12 @@ const fetchAllPokemon = () => {
   }
 
   const fetchGif = (pokemon, attack) => {
+    debugger
     return $.ajax({
       method: "GET",
       url: `http://api.giphy.com/v1/gifs/search?q=${pokemon}+${attack}&api_key=l46Cfg5hHWYSYDW5q`,
       success: (gifs) => {
+        console.log(gifs)
         currentGifs = gifs;
       }
     })
@@ -882,7 +884,7 @@ const fetchAllPokemon = () => {
 
     let gif = document.createElement("img");
     gif.setAttribute("class", "pokemon-gif");
-    let url = "http://media.giphy.com/media/" + randomGif.embed_url.slice(23) + "/giphy.gif";
+    let url = "http://media.giphy.com/media" + randomGif.embed_url.slice(23) + "/giphy.gif";
 
     gif.src = url;
     background.appendChild(gif);
