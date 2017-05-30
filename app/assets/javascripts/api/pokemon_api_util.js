@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-console.log("dom is fully loaded, pokemon util running");
+
 let fetching = true;
 let pokemon = [];
 let currentTeam = [];
@@ -471,7 +471,7 @@ const fetchAllPokemon = () => {
         let background = document.getElementsByClassName('background-modal')[0];
         fetchingDiv.setAttribute("class", "loader");
         fetchingDiv.setAttribute("id", "fetching-pokemon-loader");
-        console.log("appending fetching div....")
+
         background.appendChild(fetchingDiv);
 
         fetchPokemon(pokemon['id']).then(() => {

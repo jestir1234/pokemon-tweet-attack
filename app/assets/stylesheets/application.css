@@ -772,3 +772,14 @@
   right: 0;
   margin: auto;
 }
+
+.giphyLogo{
+  height: 20px;
+}
+
+.title-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
